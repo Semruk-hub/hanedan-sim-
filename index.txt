@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hanedan & Yeraltı Simülatörü</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #0d1117; color: #c9d1d9; padding: 14px; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 12px; }
+    .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 12px; }
+    
+    .header-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center; }
+    .stat-label { font-size: 10px; color: #8b949e; text-transform: uppercase; }
+    .stat-val { font-size: 14px; font-weight: bold; margin-top: 2px; }
+    .green { color: #3fb950; } .red { color: #f85149; } .gold { color: #d29922; } .blue { color: #58a6ff; } .purple { color: #bc8cff; }
+
+    h2 { font-size: 13px; margin-bottom: 8px; color: #8b949e; border-bottom: 1px solid #30363d; padding-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    
+    .row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #21262d; font-size: 12px; }
+    .btn-sm { padding: 4px 8px; font-size: 11px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; }
+    .btn-buy { background: #238636; color: white; }
+    .btn-sell { background: #da3633; color: white; }
+    .btn-action { background: #1f6feb; color: white; border: none; border-radius: 4px; padding: 6px 10px; font-size: 11px; cursor: pointer; font-weight: 600; }
+    .btn-dark { background: #6e7681; color: white; border: none; border-radius: 4px; padding: 6px 10px; font-size: 11px; cursor: pointer; font-weight: 600; }
+    
+    .action-btn { width: 100%; background: #21262d; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; padding: 12px; font-weight: 600; cursor: pointer; margin-top: 4px; font-size: 14px;}
+    .action-btn:active { background: #30363d; }
+
+    #log { height: 90px; overflow-y: auto; font-family: monospace; font-size: 11px; color: #8b949e; display: flex; flex-direction: column; gap: 3px; }
+
+    #death-screen { display: none; text-align: center; margin-top: 50px; }
+    #death-screen h1 { color: #f85149; margin-bottom: 15px; }
+    .heir-btn { background: #238636; color: white; border: none; padding: 10px; width: 100%; margin: 5px 0; border-radius: 6px; cursor: pointer; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<div class="container" id="main-ui">
+  <!-- Sistem Kontrolleri (Kayıt/Yükleme) -->
+  <div class="card" style="padding: 8px;">
+    <div style="display: flex; gap: 6px; justify-content: space-between;">
+      <span style="font-size: 11px; color: #8b949e; align-self: center;">Sistem:</span>
+      <div style="display: flex; gap: 6px;">
+        <button class="btn-sm btn-buy" onclick="saveGame()">💾 Kaydet</button>
+        <button class="btn-sm" style="background:#d29922; color:#000;" onclick="loadGame()">📂 Yükle</button>
+        <button class="btn-sm btn-sell" onclick="resetGame()">🗑️ Sıfırla</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card header-grid">
+    <div><div class="stat-label">Kuşak & Yaş</div><div class="stat-val blue" id="age-display">1. (18)</div></div>
+    <div><div class="stat-label">Nakit</div><div class="stat-val green" id="cash">$5,000</div></div>
+    <div><div class="stat-label">Saygınlık</div><div class="stat-val gold" id="rep">0 ⭐</div></div>
+    <div><div class="stat-label">Korunma</div><div class="stat-val purple" id="protection-status">Aktif 🛡️</div></div>
+  </div>
+
+  <div class="card">
+    <h2><span>Özel Hayat & İlişkiler</span> <button class="btn-sm btn-dark" onclick="toggleProtection()">Korunmayı Değiştir</button></h2>
+    <div class="row">
+      <div><strong>Gece Hayatı</strong> <div style="font-size:10px; color:#8b949e;">Barda rastgele biriyle takıl (-$200)</div></div>
+      <button class="btn-action" style="background: #a371f7;" onclick="hookup()">Kaçamak Yap</button>
+    </div>
+    <div id="family-status" style="font-size: 12px; margin: 8px 0; color: #c9d1d9;">Bekarsınız. Ciddi bir ilişki seçebilirsiniz:</div>
+    <div id="partner-options"></div>
+    <h2 style="margin-top: 10px; border:none;">Çocuklar</h2>
+    <div id="children-list"></div>
+  </div>
+
+  <div class="card" style="border-color: #8a2be2;">
+    <h2><span style="color: #bc8cff;">Karanlık İşler (İllegal) ⚠️</span></h2>
+    <div class="row">
+      <div><strong>Şirket Hackle</strong> <div style="font-size:10px; color:#8b949e;">Risk: %25 | Ceza: 5 Yıl Hapis veya $15k</div></div>
+      <button class="btn-sm btn-sell" style="background:#8a2be2;" onclick="commitCrime('hack')">Hackle</button>
+    </div>
+    <div class="row">
+      <div><strong>Kaçakçılık Yap</strong> <div style="font-size:10px; color:#8b949e;">Risk: %45 | Ceza: 10 Yıl Hapis veya $60k</div></div>
+      <button class="btn-sm btn-sell" style="background:#8a2be2;" onclick="commitCrime('smuggle')">Operasyon Yap</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Yasal İşlemler & İtibar Yönetimi</h2>
+    <div class="row">
+      <div><strong>PR Kampanyası</strong> <div style="font-size:10px; color:#8b949e;">-$5,000 ödeyerek medyada parlatıl</div></div>
+      <button class="btn-sm btn-buy" style="background:#d29922; color:#000;" onclick="buyReputation()">+10 ⭐ Al</button>
+    </div>
+    <div class="row">
+      <div><strong>NanoTech Hissesi</strong> <span style="color:#8b949e;" id="tech-price">($120)</span></div>
+      <div style="display:flex; gap:4px; align-items:center;">
+        <span id="tech-owned" style="font-size:11px; margin-right:5px;">0 Adet</span>
+        <button class="btn-sm btn-buy" onclick="buyStock('tech')">Al</button>
+        <button class="btn-sm btn-sell" onclick="sellStock('tech')">Sat</button>
+      </div>
+    </div>
+    <div class="row">
+      <div><strong>Rezidans Dairesi</strong> <div style="font-size:10px; color:#8b949e;">$100,000 | Getiri: +$6k/yıl</div></div>
+      <button class="btn-action" id="buy-house-btn" onclick="buyAsset('house')">Satın Al</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <button class="action-btn" onclick="nextYear()">1 Yıl Yaşa (Oto-Kayıt) ⏳</button>
+  </div>
+
+  <div class="card">
+    <h2>Yaşam Günlüğü</h2>
+    <div id="log"></div>
+  </div>
+</div>
+
+<div class="container" id="death-screen">
+  <h1>Karakterin Vefat Etti</h1>
+  <p style="margin-bottom: 20px;">Mirası devralacak varisi seç:</p>
+  <div id="heir-list"></div>
+</div>
+
+<script>
+  let defaultState = {
+    generation: 1, age: 18, cash: 5000, reputation: 0, passiveIncome: 0,
+    protection: true, spouse: null, children: [],
+    stocks: [ { id: 'tech', price: 120, owned: 0, vol: 0.25 } ],
+    assets: [ { id: 'house', cost: 100000, rep: 50, income: 6000, bought: false } ],
+    partners: [
+      { type: 'Sosyetik', cost: 5000, repBoost: 40, income: 0 },
+      { type: 'Suç Ortağı', cost: 0, repBoost: -10, income: 15000 }
+    ]
+  };
+
+  let state = JSON.parse(JSON.stringify(defaultState));
+
+  function log(msg) {
+    const box = document.getElementById('log');
+    box.innerHTML = `<div>> Yıl ${state.age}: ${msg}</div>` + box.innerHTML;
+  }
+
+  // --- SAVE SİSTEMİ EKLENTİSİ ---
+  function saveGame() {
+    localStorage.setItem('dynastySave', JSON.stringify(state));
+    log("Oyun tarayıcıya kaydedildi 💾");
+  }
+
+  function loadGame() {
+    let savedData = localStorage.getItem('dynastySave');
+    if (savedData) {
+      state = JSON.parse(savedData);
+      log("Kayıt dosyası yüklendi 📂");
+      render();
+    } else {
+      log("Bulunan bir kayıt yok!");
+    }
+  }
+
+  function resetGame() {
+    if(confirm("Tüm hanedan silinecek ve oyun sıfırlanacak. Emin misin?")) {
+      localStorage.removeItem('dynastySave');
+      location.reload();
+    }
+  }
+
+  // Otomatik Yükleme (Sayfa açıldığında kayıt varsa yükler)
+  window.onload = function() {
+    let savedData = localStorage.getItem('dynastySave');
+    if (savedData) {
+      state = JSON.parse(savedData);
+      log("Önceki kayıt otomatik yüklendi 📂");
+    } else {
+      log("Hayata 18 yaşında, $5,000 sermaye ile başladın.");
+    }
+    render();
+  };
+  // ------------------------------
+
+  function render() {
+    document.getElementById('age-display').innerText = `${state.generation}. (${state.age})`;
+    document.getElementById('cash').innerText = `$${Math.floor(state.cash).toLocaleString()}`;
+    document.getElementById('rep').innerText = `${state.reputation} ⭐`;
+    document.getElementById('protection-status').innerText = state.protection ? "Aktif 🛡️" : "Kapalı ⚠️";
+    document.getElementById('protection-status').className = state.protection ? "stat-val purple" : "stat-val red";
+
+    if (!state.spouse) {
+      document.getElementById('family-status').innerText = "Bekarsınız. Evlenmek için:";
+      let partnerHtml = '';
+      state.partners.forEach((p, idx) => {
+        partnerHtml += `<div class="row">
+          <div><strong>${p.type} Eş</strong></div>
+          <button class="btn-action" onclick="marry(${idx})">Evlen</button>
+        </div>`;
+      });
+      document.getElementById('partner-options').innerHTML = partnerHtml;
+    } else {
+      document.getElementById('family-status').innerHTML = `Evlisiniz. (<span class="gold">${state.spouse.type}</span>)`;
+      document.getElementById('partner-options').innerHTML = `<button class="btn-action" onclick="haveChild(false)">Eşinle Çocuk Yap</button>`;
+    }
+
+    let childHtml = '';
+    state.children.forEach(c => {
+      let icon = c.isBastard ? "👶 (Gayrimeşru)" : "👶";
+      let color = c.isBastard ? "#f85149" : "#c9d1d9";
+      childHtml += `<div class="row" style="background:#21262d; padding:4px 8px; border-radius:4px; margin-bottom:4px; color:${color};">
+        <span>${icon} ${c.name} (Yaş: ${c.age})</span>
+      </div>`;
+    });
+    document.getElementById('children-list').innerHTML = childHtml;
+
+    let tech = state.stocks[0];
+    document.getElementById('tech-price').innerText = `($${tech.price.toFixed(1)})`;
+    document.getElementById('tech-owned').innerText = `${tech.owned} Adet`;
+    
+    let house = state.assets[0];
+    document.getElementById('buy-house-btn').innerText = house.bought ? "Sahipsin" : "Satın Al";
+    document.getElementById('buy-house-btn').disabled = house.bought;
+  }
+
+  function toggleProtection() { state.protection = !state.protection; log(`Korunma: ${state.protection ? 'Aktif' : 'Kapalı'}`); render(); }
+  
+  function hookup() {
+    if(state.cash < 200) return;
+    state.cash -= 200; log("Gece kulübünde takıldın (-$200).");
+    if(!state.protection && Math.random() < 0.35) haveChild(true);
+    render();
+  }
+
+  function buyReputation() {
+    if (state.cash >= 5000) { state.cash -= 5000; state.reputation += 10; log("PR Kampanyası yapıldı (+10⭐)."); render(); }
+  }
+
+  function commitCrime(type) {
+    if(type === 'hack') {
+      if(Math.random() < 0.25) {
+        if (state.cash >= 15000) { state.cash -= 15000; log(`Yakalandın! 15.000$ kefalet ödedin.`); } 
+        else { log("Yakalandın! Paran olmadığı için 5 yıl hapse girdin."); advanceYears(5); }
+      } else { state.cash += 10000; log("Hack başarılı! $10.000 kazandın."); }
+    } else if (type === 'smuggle') {
+      if(Math.random() < 0.45) {
+        if (state.cash >= 60000) { state.cash -= 60000; log(`Baskın yedin! 60.000$ rüşvetle yırttın.`); } 
+        else { log("Baskında enselendin! Paran olmadığı için 10 yıl hapis yattın."); advanceYears(10); }
+      } else { state.cash += 50000; log("Kaçakçılık başarılı! $50.000 kazandın."); }
+    }
+    render();
+  }
+
+  function marry(index) { state.spouse = state.partners[index]; state.reputation += state.spouse.repBoost; log(`${state.spouse.type} biriyle evlendin!`); render(); }
+  function haveChild(isBastard) {
+    let names = ["Ali", "Ayşe", "Mert", "Zeynep", "Can", "Ece", "Bora", "Lara"];
+    let name = names[Math.floor(Math.random() * names.length)];
+    state.children.push({ name: name, age: 0, isBastard: isBastard });
+    log(isBastard ? `Gayrimeşru bir çocuğun (${name}) oldu.` : `Eşinle çocuğunuz oldu: ${name}`);
+    render();
+  }
+
+  function buyStock(id) { let s = state.stocks[0]; if(state.cash>=s.price){state.cash-=s.price; s.owned++; render();} }
+  function sellStock(id) { let s = state.stocks[0]; if(s.owned>0){state.cash+=s.price; s.owned--; render();} }
+  function buyAsset(id) { let a = state.assets[0]; if(state.cash>=a.cost && !a.bought){state.cash-=a.cost; a.bought=true; state.reputation+=a.rep; state.passiveIncome+=a.income; render();} }
+
+  function advanceYears(years) {
+    for (let i = 0; i < years; i++) {
+      state.age += 1;
+      if(state.age >= 90) { triggerDeath(); return; }
+      if (state.spouse) { state.cash -= state.spouse.cost; state.cash += state.spouse.income; }
+      state.cash += state.passiveIncome;
+      state.children.forEach(c => c.age += 1);
+      let s = state.stocks[0]; s.price = Math.max(10, s.price * (1 + ((Math.random() * (s.vol * 2)) - s.vol)));
+    }
+    render();
+  }
+
+  function nextYear() {
+    advanceYears(1);
+    log(`1 Yıl geçti. Yaş: ${state.age}`);
+    saveGame(); // HER YIL OTOMATİK KAYIT
+  }
+
+  function triggerDeath() {
+    document.getElementById('main-ui').style.display = 'none';
+    document.getElementById('death-screen').style.display = 'block';
+    let heirHtml = '';
+    if(state.children.length === 0) {
+      heirHtml = `<p>Çocuğunuz olmadığı için servet devlete kaldı.</p><button class="heir-btn" onclick="resetGame()">Baştan Başla</button>`;
+    } else {
+      state.children.forEach((c, idx) => {
+        let tag = c.isBastard ? "(Gayrimeşru)" : "(Meşru)";
+        heirHtml += `<button class="heir-btn" onclick="selectHeir(${idx})">${c.name} ${tag} (Yaş: ${c.age})</button>`;
+      });
+    }
+    document.getElementById('heir-list').innerHTML = heirHtml;
+  }
+
+  function selectHeir(index) {
+    let heir = state.children[index];
+    state.age = heir.age; state.generation += 1; state.spouse = null; state.children = [];
+    document.getElementById('death-screen').style.display = 'none';
+    document.getElementById('main-ui').style.display = 'flex';
+    log(`Miras devralındı. Yeni lider sensin.`);
+    saveGame(); // Miras atamasını kaydet
+    render();
+  }
+</script>
+</body>
+</html>
