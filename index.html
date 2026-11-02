@@ -39,7 +39,7 @@
     h1 { margin-bottom: 15px; }
     .heir-btn { background: #238636; color: white; border: none; padding: 10px; width: 100%; margin: 5px 0; border-radius: 6px; cursor: pointer; font-size: 14px; }
 
-    /* AVM / Modal Stilleri */
+    /* AVM Modal */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 10px; }
     .modal-content { background: #161b22; border: 1px solid #30363d; border-radius: 8px; width: 100%; max-width: 480px; height: 85vh; display: flex; flex-direction: column; padding: 12px; }
     .cat-btn { background: #21262d; border: 1px solid #30363d; color: #8b949e; padding: 6px 10px; border-radius: 15px; font-size: 11px; cursor: pointer; white-space: nowrap; }
@@ -164,30 +164,125 @@
   <div id="heir-list"></div>
 </div>
 
-<!-- AVM / HEDİYE DÜKKANI MODALI -->
+<!-- AVM MODALI -->
 <div id="shop-modal" class="modal-overlay">
   <div class="modal-content">
     <h2 id="shop-title" style="color:white;">Alışveriş Merkezi <button class="btn-sm btn-sell" onclick="closeShop()">Kapat</button></h2>
     <div style="font-size:11px; color:#8b949e; margin-bottom:8px;">Mevcut Bakiye: <span class="green" id="shop-cash">$0</span></div>
-    
-    <div id="shop-categories" style="display:flex; gap:6px; overflow-x:auto; margin-bottom:12px; padding-bottom:6px;">
-      <!-- Kategoriler -->
-    </div>
-    
-    <div id="shop-items" style="flex-grow:1; overflow-y:auto; display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-right:4px;">
-      <!-- Eşyalar -->
-    </div>
+    <div id="shop-categories" style="display:flex; gap:6px; overflow-x:auto; margin-bottom:12px; padding-bottom:6px;"></div>
+    <div id="shop-items" style="flex-grow:1; overflow-y:auto; display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-right:4px;"></div>
   </div>
 </div>
 
 <script>
-  // 100 Farklı Eşya Veritabanı
-  const rawItems = "🌹|Kırmızı Gül|50|Çiçek,🌻|Ayçiçeği|40|Çiçek,🌸|Orkide|150|Çiçek,🌷|Lale|60|Çiçek,🌺|Zambak|70|Çiçek,🌼|Kır Çiçeği|30|Çiçek,🌵|Kaktüs|25|Çiçek,🪴|Bonsai|200|Çiçek,🏵️|Karanfil|40|Çiçek,🪷|Lilyum|90|Çiçek,👕|Tişört|100|Giyim,👔|Gömlek|250|Giyim,🧶|Kazak|300|Giyim,👖|Kot Pantolon|400|Giyim,🩳|Şort|150|Giyim,👗|Yazlık Elbise|500|Giyim,👘|Abiye|2000|Giyim,🧥|Ceket|1200|Giyim,🧥|Kışlık Mont|1500|Giyim,🧢|Şapka|80|Giyim,🧣|Kaşkol|100|Giyim,🧤|Eldiven|120|Giyim,🧦|Çorap|20|Giyim,👟|Spor Ayakkabı|800|Giyim,👠|Topuklu Ayakkabı|1500|Giyim,🥾|Bot|1200|Giyim,👡|Terlik|150|Giyim,🎒|Sırt Çantası|400|Giyim,👜|Deri Çanta|3000|Giyim,🕶️|Güneş Gözlüğü|800|Giyim,👙|Dantelli Sütyen|300|İç Çamaşırı,🩱|İpek Gecelik|800|İç Çamaşırı,🩲|Kırmızı Külot|150|İç Çamaşırı,👘|Saten Sabahlık|1000|İç Çamaşırı,🎀|Jartiyer Takımı|1200|İç Çamaşırı,🩲|Spor İç Çamaşırı|250|İç Çamaşırı,👙|Pamuklu Takım|200|İç Çamaşırı,👙|Dantelli Bralet|400|İç Çamaşırı,👗|Korseli Takım|600|İç Çamaşırı,👚|Pijama Takımı|350|İç Çamaşırı,💍|Gümüş Yüzük|500|Ziynet,💍|Altın Yüzük|2000|Ziynet,💎|Tektaş Pırlanta|15000|Ziynet,📿|Gümüş Kolye|800|Ziynet,🦪|İnci Kolye|3000|Ziynet,⛓️|Altın Zincir|5000|Ziynet,❇️|Zümrüt Kolye|20000|Ziynet,💎|Yakut Küpe|12000|Ziynet,💎|Pırlanta Küpe|18000|Ziynet,💫|Altın Bilezik|4000|Ziynet,🔗|Gümüş Bileklik|600|Ziynet,⌚|Platin Saat|25000|Ziynet,⌚|Altın Saat|15000|Ziynet,🏵️|Yakut Broş|8000|Ziynet,💫|Altın Halhal|1500|Ziynet,📱|Akıllı Telefon|3000|Elektronik,💊|Tablet|2000|Elektronik,💻|Dizüstü Bilg.|5000|Elektronik,⌚|Akıllı Saat|1000|Elektronik,🎧|Kulaklık|500|Elektronik,🎮|Oyun Konsolu|2500|Elektronik,📺|Televizyon|4000|Elektronik,📷|Kamera|6000|Elektronik,🚁|Drone|3500|Elektronik,🕶️|VR Gözlük|2000|Elektronik,🧴|Lüks Parfüm|1200|Elektronik,🍫|Lüks Çikolata|150|Elektronik,🍷|Yıllanmış Şarap|800|Elektronik,🍾|Şampanya|1500|Elektronik,🍱|Siyah Havyar|2500|Elektronik,🚲|Bisiklet|500|Araç,🛴|E-Scooter|800|Araç,🏍️|Motosiklet|8000|Araç,🛵|Vespa|4000|Araç,🚙|Şehir Arabası|30000|Araç,🚗|Sedan|50000|Araç,🚙|Lüks SUV|90000|Araç,🏎️|Spor Araba|250000|Araç,🚘|Limuzin|400000|Araç,🚕|Klasik Araba|150000|Araç,🚐|Karavan|80000|Araç,🚤|Sürat Teknesi|300000|Araç,🛥️|Lüks Yat|1500000|Araç,🚁|Helikopter|2500000|Araç,✈️|Özel Jet|8000000|Araç,⛺|Lüks Çadır|2000|Emlak,🛖|Ahşap Kulübe|15000|Emlak,🏢|Stüdyo Daire|80000|Emlak,🏠|1+1 Ev|120000|Emlak,🏡|3+1 Daire|250000|Emlak,🏘️|Dubleks Ev|400000|Emlak,🏙️|Penthouse|800000|Emlak,🏊|Havuzlu Villa|1200000|Emlak,🏖️|Sahil Evi|1500000|Emlak,⛰️|Dağ Evi|900000|Emlak,🚜|Çiftlik Evi|2000000|Emlak,🏛️|Malikane|5000000|Emlak,🏰|Şato|12000000|Emlak,🏝️|Özel Ada|25000000|Emlak,🏢|Gökdelen Katı|8000000|Emlak";
-  const shopDb = rawItems.split(',').map((i, idx) => { let p = i.split('|'); return {id: idx, icon: p[0], name: p[1], cost: parseInt(p[2]), cat: p[3]} });
+  // Güvenli ve Hatasız 100+ Ürün Veritabanı
+  const shopDb = [
+    {id:1, icon:"🌹", name:"Kırmızı Gül", cost:50, cat:"Çiçek"},
+    {id:2, icon:"🌻", name:"Ayçiçeği", cost:40, cat:"Çiçek"},
+    {id:3, icon:"🌸", name:"Orkide", cost:150, cat:"Çiçek"},
+    {id:4, icon:"🌷", name:"Lale", cost:60, cat:"Çiçek"},
+    {id:5, icon:"🌺", name:"Zambak", cost:70, cat:"Çiçek"},
+    {id:6, icon:"🌼", name:"Kır Çiçeği", cost:30, cat:"Çiçek"},
+    {id:7, icon:"🌵", name:"Kaktüs", cost:25, cat:"Çiçek"},
+    {id:8, icon:"🪴", name:"Bonsai", cost:200, cat:"Çiçek"},
+    {id:9, icon:"🏵️", name:"Karanfil", cost:40, cat:"Çiçek"},
+    {id:10, icon:"🪷", name:"Lilyum", cost:90, cat:"Çiçek"},
+    {id:11, icon:"👕", name:"Tişört", cost:100, cat:"Giyim"},
+    {id:12, icon:"👔", name:"Gömlek", cost:250, cat:"Giyim"},
+    {id:13, icon:"🧶", name:"Kazak", cost:300, cat:"Giyim"},
+    {id:14, icon:"👖", name:"Kot Pantolon", cost:400, cat:"Giyim"},
+    {id:15, icon:"🩳", name:"Şort", cost:150, cat:"Giyim"},
+    {id:16, icon:"👗", name:"Yazlık Elbise", cost:500, cat:"Giyim"},
+    {id:17, icon:"👘", name:"Abiye", cost:2000, cat:"Giyim"},
+    {id:18, icon:"🧥", name:"Ceket", cost:1200, cat:"Giyim"},
+    {id:19, icon:"🧥", name:"Kışlık Mont", cost:1500, cat:"Giyim"},
+    {id:20, icon:"🧢", name:"Şapka", cost:80, cat:"Giyim"},
+    {id:21, icon:"🧣", name:"Kaşkol", cost:100, cat:"Giyim"},
+    {id:22, icon:"🧤", name:"Eldiven", cost:120, cat:"Giyim"},
+    {id:23, icon:"🧦", name:"Çorap", cost:20, cat:"Giyim"},
+    {id:24, icon:"👟", name:"Spor Ayakkabı", cost:800, cat:"Giyim"},
+    {id:25, icon:"👠", name:"Topuklu Ayakkabı", cost:1500, cat:"Giyim"},
+    {id:26, icon:"🥾", name:"Bot", cost:1200, cat:"Giyim"},
+    {id:27, icon:"👡", name:"Terlik", cost:150, cat:"Giyim"},
+    {id:28, icon:"🎒", name:"Sırt Çantası", cost:400, cat:"Giyim"},
+    {id:29, icon:"👜", name:"Deri Çanta", cost:3000, cat:"Giyim"},
+    {id:30, icon:"🕶️", name:"Güneş Gözlüğü", cost:800, cat:"Giyim"},
+    {id:31, icon:"👙", name:"Dantelli Sütyen", cost:300, cat:"İç Çamaşırı"},
+    {id:32, icon:"🩱", name:"İpek Gecelik", cost:800, cat:"İç Çamaşırı"},
+    {id:33, icon:"🩲", name:"Kırmızı Külot", cost:150, cat:"İç Çamaşırı"},
+    {id:34, icon:"👘", name:"Saten Sabahlık", cost:1000, cat:"İç Çamaşırı"},
+    {id:35, icon:"🎀", name:"Jartiyer Takımı", cost:1200, cat:"İç Çamaşırı"},
+    {id:36, icon:"🩲", name:"Spor İç Çamaşırı", cost:250, cat:"İç Çamaşırı"},
+    {id:37, icon:"👙", name:"Pamuklu Takım", cost:200, cat:"İç Çamaşırı"},
+    {id:38, icon:"👙", name:"Dantelli Bralet", cost:400, cat:"İç Çamaşırı"},
+    {id:39, icon:"👗", name:"Korseli Takım", cost:600, cat:"İç Çamaşırı"},
+    {id:40, icon:"👚", name:"Pijama Takımı", cost:350, cat:"İç Çamaşırı"},
+    {id:41, icon:"💍", name:"Gümüş Yüzük", cost:500, cat:"Ziynet"},
+    {id:42, icon:"💍", name:"Altın Yüzük", cost:2000, cat:"Ziynet"},
+    {id:43, icon:"💎", name:"Tektaş Pırlanta", cost:15000, cat:"Ziynet"},
+    {id:44, icon:"📿", name:"Gümüş Kolye", cost:800, cat:"Ziynet"},
+    {id:45, icon:"🦪", name:"İnci Kolye", cost:3000, cat:"Ziynet"},
+    {id:46, icon:"⛓️", name:"Altın Zincir", cost:5000, cat:"Ziynet"},
+    {id:47, icon:"❇️", name:"Zümrüt Kolye", cost:20000, cat:"Ziynet"},
+    {id:48, icon:"💎", name:"Yakut Küpe", cost:12000, cat:"Ziynet"},
+    {id:49, icon:"💎", name:"Pırlanta Küpe", cost:18000, cat:"Ziynet"},
+    {id:50, icon:"💫", name:"Altın Bilezik", cost:4000, cat:"Ziynet"},
+    {id:51, icon:"🔗", name:"Gümüş Bileklik", cost:600, cat:"Ziynet"},
+    {id:52, icon:"⌚", name:"Platin Saat", cost:25000, cat:"Ziynet"},
+    {id:53, icon:"⌚", name:"Altın Saat", cost:15000, cat:"Ziynet"},
+    {id:54, icon:"🏵️", name:"Yakut Broş", cost:8000, cat:"Ziynet"},
+    {id:55, icon:"💫", name:"Altın Halhal", cost:1500, cat:"Ziynet"},
+    {id:56, icon:"📱", name:"Akıllı Telefon", cost:3000, cat:"Elektronik"},
+    {id:57, icon:"💊", name:"Tablet", cost:2000, cat:"Elektronik"},
+    {id:58, icon:"💻", name:"Dizüstü Bilgisayar", cost:5000, cat:"Elektronik"},
+    {id:59, icon:"⌚", name:"Akıllı Saat", cost:1000, cat:"Elektronik"},
+    {id:60, icon:"🎧", name:"Kulaklık", cost:500, cat:"Elektronik"},
+    {id:61, icon:"🎮", name:"Oyun Konsolu", cost:2500, cat:"Elektronik"},
+    {id:62, icon:"📺", name:"Televizyon", cost:4000, cat:"Elektronik"},
+    {id:63, icon:"📷", name:"Kamera", cost:6000, cat:"Elektronik"},
+    {id:64, icon:"🚁", name:"Drone", cost:3500, cat:"Elektronik"},
+    {id:65, icon:"🕶️", name:"VR Gözlük", cost:2000, cat:"Elektronik"},
+    {id:66, icon:"🧴", name:"Lüks Parfüm", cost:1200, cat:"Elektronik"},
+    {id:67, icon:"🍫", name:"Lüks Çikolata", cost:150, cat:"Elektronik"},
+    {id:68, icon:"🍷", name:"Yıllanmış Şarap", cost:800, cat:"Elektronik"},
+    {id:69, icon:"🍾", name:"Şampanya", cost:1500, cat:"Elektronik"},
+    {id:70, icon:"🍱", name:"Siyah Havyar", cost:2500, cat:"Elektronik"},
+    {id:71, icon:"🚲", name:"Bisiklet", cost:500, cat:"Araç"},
+    {id:72, icon:"🛴", name:"E-Scooter", cost:800, cat:"Araç"},
+    {id:73, icon:"🏍️", name:"Motosiklet", cost:8000, cat:"Araç"},
+    {id:74, icon:"🛵", name:"Vespa", cost:4000, cat:"Araç"},
+    {id:75, icon:"🚙", name:"Şehir Arabası", cost:30000, cat:"Araç"},
+    {id:76, icon:"🚗", name:"Sedan", cost:50000, cat:"Araç"},
+    {id:77, icon:"🚙", name:"Lüks SUV", cost:90000, cat:"Araç"},
+    {id:78, icon:"🏎️", name:"Spor Araba", cost:250000, cat:"Araç"},
+    {id:79, icon:"🚘", name:"Limuzin", cost:400000, cat:"Araç"},
+    {id:80, icon:"🚕", name:"Klasik Araba", cost:150000, cat:"Araç"},
+    {id:81, icon:"🚐", name:"Karavan", cost:80000, cat:"Araç"},
+    {id:82, icon:"🚤", name:"Sürat Teknesi", cost:300000, cat:"Araç"},
+    {id:83, icon:"🛥️", name:"Lüks Yat", cost:1500000, cat:"Araç"},
+    {id:84, icon:"🚁", name:"Helikopter", cost:2500000, cat:"Araç"},
+    {id:85, icon:"✈️", name:"Özel Jet", cost:8000000, cat:"Araç"},
+    {id:86, icon:"⛺", name:"Lüks Çadır", cost:2000, cat:"Emlak"},
+    {id:87, icon:"🛖", name:"Ahşap Kulübe", cost:15000, cat:"Emlak"},
+    {id:88, icon:"🏢", name:"Stüdyo Daire", cost:80000, cat:"Emlak"},
+    {id:89, icon:"🏠", name:"1+1 Ev", cost:120000, cat:"Emlak"},
+    {id:90, icon:"🏡", name:"3+1 Daire", cost:250000, cat:"Emlak"},
+    {id:91, icon:"🏘️", name:"Dubleks Ev", cost:400000, cat:"Emlak"},
+    {id:92, icon:"🏙️", name:"Penthouse", cost:800000, cat:"Emlak"},
+    {id:93, icon:"🏊", name:"Havuzlu Villa", cost:1200000, cat:"Emlak"},
+    {id:94, icon:"🏖️", name:"Sahil Evi", cost:1500000, cat:"Emlak"},
+    {id:95, icon:"⛰️", name:"Dağ Evi", cost:900000, cat:"Emlak"},
+    {id:96, icon:"🚜", name:"Çiftlik Evi", cost:2000000, cat:"Emlak"},
+    {id:97, icon:"🏛️", name:"Malikane", cost:5000000, cat:"Emlak"},
+    {id:98, icon:"🏰", name:"Şato", cost:12000000, cat:"Emlak"},
+    {id:99, icon:"🏝️", name:"Özel Ada", cost:25000000, cat:"Emlak"},
+    {id:100, icon:"🏢", name:"Gökdelen Katı", cost:8000000, cat:"Emlak"}
+  ];
+
   const allCategories = [...new Set(shopDb.map(i => i.cat))];
 
   function generateFlirts(playerGender) {
-    let names = []; let jobs = [];
+    let names = [], jobs = [];
     if(playerGender === 'E') {
       names = ["Aylin", "Buse", "Ceren", "Deniz", "Ece", "Funda", "Gizem", "Hande", "Irmak", "Jale", "Kübra", "Lara", "Melis", "Nur", "Oya", "Pelin", "Rüya", "Selin", "Tuğçe", "Umay"];
       jobs = ["Üniversiteli", "Model", "Hemşire", "Oyuncu", "Güzellik Uzm.", "Yazılımcı", "Influencer", "DJ", "Spor Eğitm.", "Mimar", "Hostes", "Ressam", "Tasarımcı", "Avukat", "Öğretmen", "Stilist", "Şef", "Yoga Eğitm.", "Müzisyen", "Barmen"];
@@ -239,11 +334,11 @@
     box.innerHTML = `<div>> Yıl ${state.age}: ${msg}</div>` + box.innerHTML;
   }
 
-  function saveGame() { localStorage.setItem('dynastySave8', JSON.stringify(state)); }
-  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave8'); location.reload(); } }
+  function saveGame() { localStorage.setItem('dynastySave9', JSON.stringify(state)); }
+  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave9'); location.reload(); } }
 
   window.onload = function() {
-    let savedData = localStorage.getItem('dynastySave8');
+    let savedData = localStorage.getItem('dynastySave9');
     if (savedData) {
       state = JSON.parse(savedData);
       document.getElementById('start-screen').style.display = 'none';
