@@ -571,11 +571,11 @@
     box.innerHTML = `<div>> Yıl ${Math.floor(state.week/52)+1} (Hafta ${state.week}): ${msg}</div>` + box.innerHTML;
   }
 
-  function saveGame() { localStorage.setItem('dynastySave38', JSON.stringify(state)); }
-  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave38'); location.reload(); } }
+  function saveGame() { localStorage.setItem('dynastySave39', JSON.stringify(state)); }
+  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave39'); location.reload(); } }
 
   window.onload = function() {
-    let savedData = localStorage.getItem('dynastySave38');
+    let savedData = localStorage.getItem('dynastySave39');
     if (savedData) {
       state = JSON.parse(savedData);
       if(!state.office) state.office = "Sivil";
@@ -832,6 +832,7 @@
     let html = '';
     playmatesDb.forEach(pm => {
       let canMarry = state.beauty >= pm.minBeauty && (state.office === 'Belediye Başkanı' || state.reputation >= 100);
+      let marryBtn = canMarry ? `<button class="btn-sm btn-buy" style="background:#238636;" onclick="marryPlaymate('${pm.name}', '${pm.avatar}')">Evlen</button>` : `<span style="font-size:10px; color:#f85149;">Şartlar Yetersiz (Karizma %${pm.minBeauty}+ & Başkan)</span>`;
       html += `
         <div class="row" style="background:#0d1117; padding:8px; border-radius:6px; align-items:center;">
           <div style="display:flex; gap:8px; align-items:center;">
@@ -841,9 +842,9 @@
               <div style="font-size:10px; color:#8b949e;">Gereksinim: %${pm.minBeauty} Karizma & Başkanlık/Yüksek Şöhret | Buluşma: $${pm.cost.toLocaleString()}</div>
             </div>
           </div>
-          <div style="display:flex; gap:4px;">
+          <div style="display:flex; gap:4px; align-items:center;">
             <button class="btn-sm btn-buy" style="background:#a371f7;" onclick="interactPlaymate('${pm.name}', ${pm.cost})">Buluş ($${pm.cost})</button>
-            ${(!state.spouse && canMarry) ? `<button class="btn-sm btn-buy" style="background:#238636;" onclick="marryPlaymate('${pm.name}', '${pm.avatar}')">Evlen</button>` : ''}
+            ${(!state.spouse) ? marryBtn : ''}
           </div>
         </div>`;
     });
