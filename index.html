@@ -60,7 +60,7 @@
 
 <div class="container" id="start-screen">
   <h1>İmparatorluk Kur</h1>
-  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">BDSM, özel jet kaçamakları, fetişler ve tam simülasyon.</p>
+  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Dul kadınlar ağı, swinger, DarkWeb ve tam simülasyon.</p>
   <input type="text" id="char-name" placeholder="Karakter İsmi (Örn: Semruk)" autocomplete="off">
   <div style="display:flex; gap:10px; margin-bottom: 15px;">
     <select id="gender-select">
@@ -120,7 +120,7 @@
     </div>
 
     <div class="card">
-      <h2><span>Dinlenme & İleri Fetişler</span> <button class="btn-sm btn-dark" onclick="toggleProtection()">Korunma: Açık</button></h2>
+      <h2><span>Dinlenme & Fetiş Dünyası</span> <button class="btn-sm btn-dark" onclick="toggleProtection()">Korunma: Açık</button></h2>
       <div class="row">
         <div><strong>Evde Dinlen / Uyku</strong> <div style="font-size:10px; color:#8b949e;">Stresi azalt, dinlen</div></div>
         <button class="btn-sm btn-buy" onclick="restAtHome()">Dinlen</button>
@@ -130,15 +130,23 @@
         <button class="btn-sm btn-buy" style="background:#ff79c6; color:black;" onclick="soloMasturbation()">1 🫱🏼‍🦲 💦</button>
       </div>
       <div class="row">
-        <div><strong>Nike Pro, Çorap & Tanga Fetişi</strong> <div style="font-size:10px; color:#8b949e;">Spor kıyafetleri ve çamaşırlar üzerinde boşal</div></div>
-        <button class="btn-sm btn-buy" style="background:#ff79c6; color:black;" onclick="openUnderwearForeskinModal()">🩲 Fetiş</button>
+        <div><strong>Envanterdeki Kıyafetle Fetiş Yap</strong> <div style="font-size:10px; color:#8b949e;">Çamaşır/tayt üzerinde boşal, DarkWeb kasasına at</div></div>
+        <button class="btn-sm btn-buy" style="background:#ff79c6; color:black;" onclick="openUnderwearForeskinModal()">🩲 Fetiş & Biriktir</button>
+      </div>
+      <div class="row" id="swinger-app-row" style="display:none;">
+        <div><strong>🔥 Swinger & Hotwife Ağı (App)</strong> <div style="font-size:10px; color:#8b949e;">Eşini elit VIP'lerle paylaş, büyük paralar kazan</div></div>
+        <button class="btn-sm btn-buy" style="background:#e1306c; color:white;" onclick="openSwingerAppModal()">Uygulamayı Aç 📱</button>
       </div>
       <div class="row">
-        <div><strong>BDSM & Kelepçe Seansı</strong> <div style="font-size:10px; color:#8b949e;">Deri kırbaç & kelepçe ile yoğun stres at (-35%)</div></div>
+        <div><strong>🖤 Dul Kadınlar Ağı (Gizli App)</strong> <div style="font-size:10px; color:#8b949e;">Dul kadınları tavla veya zorla, paylaş ve DarkWeb'de sat</div></div>
+        <button class="btn-sm btn-buy" style="background:#21262d; border:1px solid #ff79c6; color:#ff79c6;" onclick="openWidowsAppModal()">Dul Ağı 🥀</button>
+      </div>
+      <div class="row">
+        <div><strong>BDSM & Kelepçe Seansı</strong> <div style="font-size:10px; color:#8b949e;">Yoğun stres at (-35%)</div></div>
         <button class="btn-sm btn-buy" style="background:#bc8cff; color:black;" onclick="bdsmEncounter()">⛓️ BDSM</button>
       </div>
       <div class="row">
-        <div><strong>Özel Jette / Ofiste Gizli Kaçamak</strong> <div style="font-size:10px; color:#8b949e;">Lüks varlıklarda kamusal fetiş (-40% Stres)</div></div>
+        <div><strong>Özel Jette / Ofiste Gizli Kaçamak</strong> <div style="font-size:10px; color:#8b949e;">Kamusal alanda heyecan yaşa (-40%)</div></div>
         <button class="btn-sm btn-buy" style="background:#a371f7; color:white;" onclick="publicEncounter()">✈️ VIP Kaçamak</button>
       </div>
       <div class="row">
@@ -156,6 +164,20 @@
       <div id="flirt-app-container" class="flirt-box"></div>
       <div id="family-status" style="font-size: 12px; margin: 12px 0 8px 0; color: #c9d1d9; border-top:1px solid #30363d; padding-top:8px;">Bekarsınız. Görücü Usulü Adaylar:</div>
       <div id="partner-options" class="scroll-box" style="max-height:100px;"></div>
+    </div>
+
+    <!-- ASYA KÖLELERİ VE HİZMETLİLERİ PANELİ -->
+    <div class="card" style="border-color: #bc8cff;">
+      <h2 style="color: #bc8cff;">⛓️ Asya Köle & Hizmetli Kadrosu (<span id="slave-count">0</span> Kişi)</h2>
+      <div style="font-size:11px; color:#8b949e; margin-bottom:8px;">Asya seyahatlerinden getirttiğin köleleri yönet:</div>
+      <div id="slaves-list" class="scroll-box" style="max-height:120px;"></div>
+    </div>
+
+    <!-- DUL KADINLARIM KASASI -->
+    <div class="card" style="border-color: #ff79c6;">
+      <h2 style="color: #ff79c6;">🥀 Kontrolün Altındaki Dul Kadınlar (<span id="widow-count">0</span> Kişi)</h2>
+      <div style="font-size:11px; color:#8b949e; margin-bottom:8px;">Ağ üzerinden tavlayıp veya baskıyla bağladığın dul kadınlar:</div>
+      <div id="widows-list" class="scroll-box" style="max-height:120px;"></div>
     </div>
 
     <div class="card">
@@ -207,9 +229,9 @@
   <!-- SEKME 3: VARLIKLAR -->
   <div id="tab-varlik" class="tab-content">
     <div class="card" style="border-color: #d29922;">
-      <h2 style="color: #d29922;">🛍️ Şehir AVM, BDSM Ekipmanları & Estetik</h2>
+      <h2 style="color: #d29922;">🛍️ Şehir AVM, Fantezi Giyim & Estetik</h2>
       <div class="row" style="border:none; margin:0;">
-        <div style="font-size:11px; color:#8b949e; flex:1;">BDSM kitleri, file çoraplar, fantezi giyim ve estetik.</div>
+        <div style="font-size:11px; color:#8b949e; flex:1;">Tanga, sütyen, tayt, etek, BDSM setleri ve estetik.</div>
         <div style="display:flex; gap:6px;">
           <button class="btn-action" style="background:#d29922; color:black; font-weight:bold;" onclick="openShop(null)">AVM</button>
           <button class="btn-action" style="background:#ff79c6; color:black; font-weight:bold;" onclick="openPlasticSurgery()">Estetik 💉</button>
@@ -227,7 +249,16 @@
   <!-- SEKME 4: YERALTI -->
   <div id="tab-yeralti" class="tab-content">
     <div class="card" style="border-color: #8a2be2;">
-      <h2><span style="color: #bc8cff;">Yeraltı, Çete Savaşları & Kartel ⚠️</span></h2>
+      <h2><span style="color: #bc8cff;">Asya Yeraltı Köle Seferi 🌏⛓️</span></h2>
+      <div class="row" style="border-bottom:1px solid #30363d; padding-bottom:8px; margin-bottom:8px;">
+        <div><strong>Asya'dan Köle Kaçakçılığı</strong> <div style="font-size:10px; color:#8b949e;">Maliyet: $40,000 | Risk: %40</div></div>
+        <button class="btn-sm btn-buy" style="background:#bc8cff; color:black;" onclick="importAsianSlave()">Köle Getir 🚢</button>
+      </div>
+      <h2><span style="color: #bc8cff;">DarkWeb Açık Artırma Pazarı 🏴‍☠️</span></h2>
+      <div class="row" style="border-bottom:1px solid #30363d; padding-bottom:8px; margin-bottom:8px;">
+        <div><strong>Kullanılmış Fetiş Kasası:</strong> <span class="pink" id="used-inventory-count">0 Adet</span></div>
+        <button class="btn-sm btn-buy" style="background:#8a2be2;" onclick="openDarkWebMarket()">Açık Artırmaya Çıkar 🔨</button>
+      </div>
       <div class="row">
         <div><strong>Mahalle Çetesi Kur / Genişlet</strong> <div style="font-size:10px; color:#8b949e;">Haftalık haraç toplar</div></div>
         <button class="btn-sm btn-buy" style="background:#8a2be2;" onclick="upgradeGang()">Çeteyi Güçlendir ($20k)</button>
@@ -269,11 +300,38 @@
   <div id="heir-list"></div>
 </div>
 
-<!-- İÇ ÇAMAŞIRI MODALI -->
+<!-- DUL KADINLAR AĞI MODALI -->
+<div id="widows-modal" class="modal-overlay">
+  <div class="modal-content">
+    <h2 style="color:#ff79c6;">🥀 Dul Kadınlar Ağı (Gizli Portâl) <button class="btn-sm btn-sell" onclick="closeWidowsAppModal()">Kapat</button></h2>
+    <div style="font-size:11px; color:#8b949e; margin-bottom:10px;">Çevredeki dul kadınları tavlayarak gönüllü yapabilir veya çete gücüyle zorla boyun eğdirebilirsin:</div>
+    <div style="flex-grow:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;" id="widows-profiles-list"></div>
+  </div>
+</div>
+
+<!-- SWINGER & HOTWIFE AĞI MODALI -->
+<div id="swinger-modal" class="modal-overlay">
+  <div class="modal-content">
+    <h2 style="color:#e1306c;">🔥 Swinger & Hotwife Gizli Ağı <button class="btn-sm btn-sell" onclick="closeSwingerAppModal()">Kapat</button></h2>
+    <div style="font-size:11px; color:#8b949e; margin-bottom:10px;">Eşini, Asya kölelerini veya dul kadınları VIP müşterilerle paylaşarak büyük paralar kazan:</div>
+    <div style="flex-grow:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;" id="swinger-partners-list"></div>
+  </div>
+</div>
+
+<!-- DARKWEB AÇIK ARTIRMA MODALI -->
+<div id="darkweb-modal" class="modal-overlay">
+  <div class="modal-content">
+    <h2 style="color:#bc8cff;">🔨 DarkWeb Açık Artırma Evi <button class="btn-sm btn-sell" onclick="closeDarkWebMarket()">Kapat</button></h2>
+    <div style="font-size:11px; color:#8b949e; margin-bottom:10px;">Gizli koleksiyoncular fetiş eşyalarını kapışıyor. Vurgun yap:</div>
+    <div style="flex-grow:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;" id="darkweb-items-list"></div>
+  </div>
+</div>
+
+<!-- ENVANTER ZORUNLU İÇ ÇAMAŞIRI MODALI -->
 <div id="underwear-modal" class="modal-overlay">
   <div class="modal-content" style="height:auto; text-align:center; justify-content:center; gap:12px;">
-    <h2 style="color:#ff79c6; justify-content:center;">🩲 Nike Pro, Çorap & Fantezi Fetiş</h2>
-    <p style="font-size:11px; color:#8b949e;">Envanterindeki spor kıyafetleri ve çamaşırlar üzerinde mastürbasyon yap:</p>
+    <h2 style="color:#ff79c6; justify-content:center;">🩲 Envanter Fetişleri</h2>
+    <p style="font-size:11px; color:#8b949e;">AVM'den satın alıp envanterine eklediğin parçalar:</p>
     <div id="underwear-list" style="display:flex; flex-direction:column; gap:8px;"></div>
     <button class="btn-sm btn-sell" style="margin-top:5px; padding:8px;" onclick="closeUnderwearModal()">Vazgeç</button>
   </div>
@@ -376,14 +434,12 @@
 </div>
 
 <script>
-  // BDSM KİTLERİ, TOPUKLU AYAKKABI VE FANTEZİ ÜRÜNLERİ DAHİL TAM LİSTE
   const shopDb = [
     {id:1, icon:"🌹", name:"Kırmızı Gül", cost:50, cat:"Çiçek"}, {id:2, icon:"🌻", name:"Ayçiçeği", cost:40, cat:"Çiçek"}, {id:3, icon:"🌸", name:"Orkide", cost:150, cat:"Çiçek"}, {id:4, icon:"🌷", name:"Özel İthal Orkide", cost:450, cat:"Çiçek"},
     {id:11, icon:"👕", name:"Tişört", cost:100, cat:"Giyim"}, {id:12, icon:"👔", name:"Gömlek", cost:250, cat:"Giyim"}, {id:17, icon:"👘", name:"Abiye", cost:2000, cat:"Giyim"}, {id:20, icon:"🧥", name:"Haute Couture Elbise", cost:15000, cat:"Giyim"}, {id:21, icon:"👗", name:"Seksi Mini Etek & Fantezi Elbise", cost:1200, cat:"Giyim"},
     {id:22, icon:"👚", name:"Crop Top (Sokak Stili)", cost:350, cat:"Giyim"}, {id:23, icon:"👖", name:"Nike Pro Sporcu Tayt", cost:600, cat:"Giyim"}, {id:24, icon:"🎽", name:"Nike Pro Sporcu Sütyeni", cost:500, cat:"Giyim"},
     {id:31, icon:"👙", name:"Dantelli Sütyen", cost:300, cat:"İç Çamaşırı"}, {id:32, icon:"🩱", name:"İpek Gecelik", cost:800, cat:"İç Çamaşırı"}, {id:33, icon:"🎀", name:"Jartiyer Takımı", cost:1200, cat:"İç Çamaşırı"}, {id:34, icon:"🩲", name:"Saten Tanga", cost:400, cat:"İç Çamaşırı"},
     {id:35, icon:"🖤", name:"G-String (Siyah)", cost:350, cat:"İç Çamaşırı"}, {id:36, icon:"🍑", name:"Brezilya Kesim Külot", cost:450, cat:"İç Çamaşırı"}, {id:37, icon:"🍒", name:"Push-Up Sütyen", cost:750, cat:"İç Çamaşırı"}, {id:38, icon:"🐆", name:"Leopar Desenli Sütyen & Tanga", cost:950, cat:"İç Çamaşırı"}, {id:39, icon:"🖤", name:"Deri Sütyen & Tanga Takımı", cost:1600, cat:"İç Çamaşırı"},
-    // YENİ BDSM VE FANTEZİ AKSESUARLAR
     {id:40, icon:"⛓️", name:"Deri Kelepçe & Kırbaç Seti (BDSM)", cost:2500, cat:"Fantezi & BDSM"}, {id:41, icon:"👠", name:"Platform Stiletto (Topuklu)", cost:900, cat:"Fantezi & BDSM"}, {id:42, icon:"🧦", name:"File Çorap & Jartiyer", cost:500, cat:"Fantezi & BDSM"},
     {id:43, icon:"💍", name:"Gümüş Yüzük", cost:500, cat:"Ziynet"}, {id:44, icon:"💎", name:"Tektaş Pırlanta", cost:15000, cat:"Ziynet"}, {id:45, icon:"⌚", name:"Platin Saat", cost:25000, cat:"Ziynet"},
     {id:56, icon:"📱", name:"Akıllı Telefon", cost:3000, cat:"Elektronik"}, {id:58, icon:"💻", name:"Dizüstü Bilgisayar", cost:5000, cat:"Elektronik"}, {id:69, icon:"🍾", name:"Şampanya", cost:1500, cat:"Elektronik"},
@@ -414,6 +470,15 @@
     { name: "Kendall J.", title: "Dünya Yıldızı", cost: 15000, avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Kendall" }
   ];
 
+  const swingerProfiles = [
+    { name: "Mert & Selin Çifti", style: "Elit Gece Kulübü Üyeleri", reward: 25000 },
+    { name: "Baron & Leyla", style: "Yeraltı Baronları", reward: 45000 },
+    { name: "Hollywood Prodüktörleri", style: "Gizli Rezidans Partisi", reward: 70000 }
+  ];
+
+  const asianNames = ["Mei", "Lin", "Sakura", "Hana", "Aoi", "Yuki", "Jin", "Sora"];
+  const widowNames = ["Berrin", "Nermin", "Füsun", "Jale", "Gönül", "Serap", "Lale", "Necla"];
+
   const substancesDb = [
     {id:'sigara', name:'Sigara Paketi (20 Adet)', cost:100, stressRelief:15, healthCost:5, type:'legal', count:20},
     {id:'alkol', name:'Viski Şişesi (Alkol)', cost:300, stressRelief:30, healthCost:10, drunkAdd:25, type:'legal', count:10},
@@ -438,6 +503,7 @@
     document.getElementById('tab-' + tabName).classList.add('active');
     event.currentTarget.classList.add('active');
     if(tabName === 'basari') renderAchievements();
+    if(tabName === 'yeralti') document.getElementById('used-inventory-count').innerText = `${state.usedFetishInventory.length} Adet`;
   }
 
   function generateFlirts(playerGender) {
@@ -473,6 +539,9 @@
     office: "Sivil", gangPower: 0, gangIncome: 0, disease: null,
     ofFollowers: 0, ofEarnings: 0, totalEncounters: 0, totalDrugEarnings: 0,
     inventorySubstances: {},
+    usedFetishInventory: [],
+    asianSlaves: [],
+    widows: [], // DUL KADINLAR KASASI
     avatarUrl: "https://i.ibb.co/6byg5Lw/avatar-giri-imci.png",
     protection: true, spouse: null, children: [], inventory: [],
     flirts: [], partners: [],
@@ -502,11 +571,11 @@
     box.innerHTML = `<div>> Yıl ${Math.floor(state.week/52)+1} (Hafta ${state.week}): ${msg}</div>` + box.innerHTML;
   }
 
-  function saveGame() { localStorage.setItem('dynastySave28', JSON.stringify(state)); }
-  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave28'); location.reload(); } }
+  function saveGame() { localStorage.setItem('dynastySave35', JSON.stringify(state)); }
+  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave35'); location.reload(); } }
 
   window.onload = function() {
-    let savedData = localStorage.getItem('dynastySave28');
+    let savedData = localStorage.getItem('dynastySave35');
     if (savedData) {
       state = JSON.parse(savedData);
       if(!state.office) state.office = "Sivil";
@@ -518,6 +587,9 @@
       if(state.ofFollowers === undefined) state.ofFollowers = 0;
       if(state.totalEncounters === undefined) state.totalEncounters = 0;
       if(state.totalDrugEarnings === undefined) state.totalDrugEarnings = 0;
+      if(state.usedFetishInventory === undefined) state.usedFetishInventory = [];
+      if(state.asianSlaves === undefined) state.asianSlaves = [];
+      if(state.widows === undefined) state.widows = [];
       document.getElementById('start-screen').style.display = 'none';
       document.getElementById('main-ui').style.display = 'flex';
       render();
@@ -558,7 +630,8 @@
     }
     state.stress = Math.max(0, state.stress - 35);
     state.totalEncounters += 1;
-    log("Deri kırbaç ve kelepçe kullanarak yoğun bir BDSM seansı gerçekleştirdin, tüm stresin uçtu (-35% Stres). ⛓️🔥");
+    state.usedFetishInventory.push({ icon: "⛓️", name: "Kullanılmış BDSM Seti", val: 2000 });
+    log("Yoğun bir BDSM seansı gerçekleştirdin. Set DarkWeb kasasına eklendi (-35% Stres). ⛓️🔥");
     render();
   }
 
@@ -571,50 +644,161 @@
     }
     state.stress = Math.max(0, state.stress - 40);
     state.totalEncounters += 1;
-    log("Özel jetinde veya ofisinde gizli ve tehlikeli bir kaçamak yaşayıp büyük heyecan duydun (-40% Stres). ✈️💦");
+    log("Özel jetinde veya ofisindeki kaçamak sonrasi heyecan tavan yaptı (-40% Stres). ✈️💦");
     render();
   }
 
+  // DUL KADINLAR UYGULAMASI
+  function openWidowsAppModal() {
+    document.getElementById('widows-modal').style.display = 'flex';
+    let namesSample = ["Berrin", "Nermin", "Füsun", "Jale", "Gönül", "Serap", "Lale", "Necla"];
+    let html = '';
+    namesSample.forEach((wName, idx) => {
+      html += `
+        <div class="row" style="background:#0d1117; padding:8px; border-radius:6px; align-items:center;">
+          <div style="display:flex; gap:8px; align-items:center;">
+            <img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=${wName}" style="width:32px;height:32px;border-radius:4px;">
+            <div>
+              <strong>${wName} (Dul)</strong>
+              <div style="font-size:10px; color:#8b949e;">Yalnız ve savunmasız</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:4px;">
+            <button class="btn-sm btn-buy" style="background:#238636;" onclick="recruitWidow('${wName}', 'tavla')">Tatlı Dille Tavla 🌹</button>
+            <button class="btn-sm btn-buy" style="background:#f85149;" onclick="recruitWidow('${wName}', 'zorla')">Zorla Boyun Eğdir ⛓️</button>
+          </div>
+        </div>`;
+    });
+    document.getElementById('widows-profiles-list').innerHTML = html;
+  }
+  function closeWidowsAppModal() { document.getElementById('widows-modal').style.display = 'none'; }
+
+  function recruitWidow(name, method) {
+    if(method === 'tavla' && state.cash < 2000) { alert("Tavlamak için hediye masrafı olarak $2,000 lazım!"); return; }
+    if(method === 'tavla') state.cash -= 2000;
+    
+    state.widows.push({ name: name, avatar: `https://api.dicebear.com/9.x/pixel-art/svg?seed=${name}`, method: method });
+    state.reputation += method === 'tavla' ? 5 : -5;
+    log(`${name} isimli dul kadın ${method === 'tavla' ? 'romantik taktiklerle ağa' : 'çete gücüyle zorla sisteme'} dahil edildi.`);
+    closeWidowsAppModal(); render();
+  }
+
+  function importAsianSlave() {
+    let cost = 40000;
+    if(state.cash < cost) { alert("Asya köle seferi için $40,000 bütçe lazım!"); return; }
+    state.cash -= cost;
+    state.stress += 10;
+    
+    if(Math.random() < 0.40) {
+      log("⚠️ ASYA SEFERİNDE BASKIN! Sahil güvenlik operasyonu bastı, köle gemisi yakalandı ($40k yandı).");
+    } else {
+      let sName = asianNames[Math.floor(Math.random() * asianNames.length)];
+      state.asianSlaves.push({ name: sName, avatar: `https://api.dicebear.com/9.x/pixel-art/svg?seed=${sName}` });
+      state.reputation += 10;
+      log(`Asya'dan başarılı bir gizli seferle köle getirtildi: ${sName} malikaneye katıldı 🌏⛓️ (+10⭐)`);
+    }
+    render();
+  }
+
+  function openSwingerAppModal() {
+    document.getElementById('swinger-modal').style.display = 'flex';
+    let html = '';
+    swingerProfiles.forEach(sw => {
+      html += `
+        <div class="row" style="background:#0d1117; padding:8px; border-radius:6px; align-items:center;">
+          <div>
+            <strong>${sw.name}</strong>
+            <div style="font-size:10px; color:#8b949e;">${sw.style} | Vaat Edilen Nakit: <span class="green">$${sw.reward.toLocaleString()}</span></div>
+          </div>
+          <button class="btn-sm btn-buy" style="background:#e1306c;" onclick="executeSwingerEvent(${sw.reward}, '${sw.name}')">Anlaş & Paylaş</button>
+        </div>`;
+    });
+    document.getElementById('swinger-partners-list').innerHTML = html;
+  }
+  function closeSwingerAppModal() { document.getElementById('swinger-modal').style.display = 'none'; }
+
+  function executeSwingerEvent(reward, groupName) {
+    if(!state.spouse && state.asianSlaves.length === 0 && state.widows.length === 0) { 
+      alert("Paylaşacak eşin, Asya kölen veya kontrolünde dul kadın yok!"); 
+      return; 
+    }
+    state.cash += reward;
+    state.stress = Math.max(0, state.stress - 45);
+    state.totalEncounters += 1;
+    
+    let targetName = "Grup Üyesi";
+    if(state.spouse) targetName = state.spouse.type;
+    else if(state.asianSlaves.length > 0) targetName = state.asianSlaves[0].name;
+    else if(state.widows.length > 0) targetName = state.widows[0].name;
+
+    state.usedFetishInventory.push({ icon: "👗", name: `Kullanılmış ${targetName} Fantezi Elbisesi (${groupName})`, val: 6000 });
+    log(`${groupName} ile ${targetName} paylaşıldı! Vurgun yapıldı ve değerli fetiş eşyası kasaya düştü (+$${reward.toLocaleString()}). 🥂🔥`);
+    closeSwingerAppModal(); render();
+  }
+
   function openUnderwearForeskinModal() {
-    let sportItems = state.inventory.filter(i => i.cat === 'İç Çamaşırı' || i.name.includes('Nike Pro') || i.name.includes('Crop Top'));
+    let sportItems = state.inventory.filter(i => i.cat === 'İç Çamaşırı' || i.cat === 'Giyim');
     let html = '';
     
     if(sportItems.length === 0) {
-      html = `<div style="font-size:12px; color:#8b949e; margin-bottom:10px;">Envanterinde hiç spor kıyafeti veya iç çamaşırı yok! AVM'den Nike Pro tayt, sporcu sütyeni veya tanga almalısın.</div>`;
+      html = `<div style="font-size:12px; color:#f85149; margin-bottom:10px;">⚠️ Envanterinde hiç çamaşır, tayt veya etek yok! Önce AVM'den bunlardan satın almalısın.</div>`;
     } else {
       sportItems.forEach((uw, idx) => {
         html += `
-          <button class="action-btn" style="background:#21262d; border:1px solid #30363d; color:#c9d1d9; text-align:left; padding:10px;" onclick="useUnderwearFetish('${uw.name}')">
+          <button class="action-btn" style="background:#21262d; border:1px solid #30363d; color:#c9d1d9; text-align:left; padding:10px;" onclick="useUnderwearFetish(${idx}, '${uw.name}', '${uw.icon}', ${uw.cost})">
             <strong>${uw.icon} ${uw.name} Üzerinde Boşal</strong>
-            <div style="font-size:10px; color:#8b949e;">Stres Azaltma: -28%</div>
+            <div style="font-size:10px; color:#3fb950;">Stres Azaltma: -30% | DarkWeb Kasasına Aktarılacak</div>
           </button>`;
       });
     }
-    html += `
-      <button class="action-btn" style="background:#238636; color:white; text-align:center; padding:10px; margin-top:5px;" onclick="buyAndUseNikePro()">
-        <strong>🛒 Hızlı Nike Pro Tayt & Sporcu Sütyeni Al & Boşal ($1,100)</strong>
-        <div style="font-size:10px; color:#ff79c6;">Stres Azaltma: -38%</div>
-      </button>`;
 
     document.getElementById('underwear-list').innerHTML = html;
     document.getElementById('underwear-modal').style.display = 'flex';
   }
   function closeUnderwearModal() { document.getElementById('underwear-modal').style.display = 'none'; }
 
-  function useUnderwearFetish(itemName) {
-    state.stress = Math.max(0, state.stress - 28);
+  function useUnderwearFetish(invIdx, itemName, itemIcon, itemCost) {
+    state.inventory.splice(invIdx, 1);
+    let resaleVal = Math.floor(itemCost * 2.5);
+    state.usedFetishInventory.push({ icon: itemIcon, name: `Kullanılmış ${itemName}`, val: resaleVal });
+
+    state.stress = Math.max(0, state.stress - 30);
     state.totalEncounters += 1;
-    log(`${itemName} üzerinde mastürbasyon yapıp rahatladın (-28% Stres). 🔥💦`);
+    log(`${itemName} üzerinde boşaldın! Koleksiyoncu değeri katlanarak DarkWeb kasasına eklendi (-30% Stres). 🩲💦`);
     closeUnderwearModal(); render();
   }
 
-  function buyAndUseNikePro() {
-    if(state.cash < 1100) { alert("Paran yetersiz!"); return; }
-    state.cash -= 1100;
-    state.stress = Math.max(0, state.stress - 38);
-    state.totalEncounters += 1;
-    log(`Nike Pro spor seti temin edip yoğun bir fetiş deneyimi yaşadın (-38% Stres). 🖤`);
-    closeUnderwearModal(); render();
+  function openDarkWebMarket() {
+    document.getElementById('darkweb-modal').style.display = 'flex';
+    let html = '';
+    if(state.usedFetishInventory.length === 0) {
+      html = `<div style="font-size:12px; color:#8b949e;">DarkWeb açık artırma evinde satılacak hiç fetiş eşyası yok. Önce kıyafet alıp üzerinde fetiş gerçekleştir!</div>`;
+    } else {
+      state.usedFetishInventory.forEach((item, idx) => {
+        html += `
+          <div class="row" style="background:#0d1117; padding:8px; border-radius:6px; align-items:center;">
+            <div style="display:flex; gap:8px; align-items:center;">
+              <span style="font-size:24px;">${item.icon}</span>
+              <div>
+                <strong>${item.name}</strong>
+                <div style="font-size:10px; color:#d29922;">Taban Değer: $${item.val.toLocaleString()}</div>
+              </div>
+            </div>
+            <button class="btn-sm btn-buy" style="background:#8a2be2;" onclick="auctionUsedFetishItem(${idx})">Açık Artırmaya Çıkar 🔨</button>
+          </div>`;
+      });
+    }
+    document.getElementById('darkweb-items-list').innerHTML = html;
+  }
+  function closeDarkWebMarket() { document.getElementById('darkweb-modal').style.display = 'none'; }
+
+  function auctionUsedFetishItem(idx) {
+    let item = state.usedFetishInventory.splice(idx, 1)[0];
+    let multiplier = 2.0 + (Math.random() * 3.5);
+    let finalBid = Math.floor(item.val * multiplier);
+    state.cash += finalBid;
+    log(`DarkWeb Vurgunu! ${item.name} açık artırmada gizli koleksiyonculara $${finalBid.toLocaleString()} rekor fiyata satıldı! 🔨💰`);
+    openDarkWebMarket(); render();
   }
 
   function openPositionsModal(partnerName) {
@@ -821,7 +1005,7 @@
         state.reputation += Math.floor(item.cost / 20000);
         log(`Kendine ${item.icon} ${item.name} aldın! (+Kira Geliri ve Konfor)`);
       } else if(item.cat === 'Araç' || item.cat === 'Evcil Hayvan' || item.cat === 'İç Çamaşırı' || item.cat === 'Giyim' || item.cat === 'Fantezi & BDSM') {
-        log(`Kendine ${item.icon} ${item.name} aldın!`);
+        log(`Kendine ${item.icon} ${item.name} aldın! Envantere eklendi.`);
       } else if(item.cat === 'Antika & Sanat' || item.cat === 'Yatırım & Altın') {
         state.reputation += Math.floor(item.cost / 15000);
         log(`Koleksiyonuna ${item.icon} ${item.name} ekledin! Saygınlık arttı.`);
@@ -1095,6 +1279,12 @@
     document.getElementById('drunk-display').innerText = `${state.drunk}%`;
     document.getElementById('politics-modal-office').innerText = state.office;
 
+    if(state.spouse || state.asianSlaves.length > 0 || state.widows.length > 0) {
+      document.getElementById('swinger-app-row').style.display = 'flex';
+    } else {
+      document.getElementById('swinger-app-row').style.display = 'none';
+    }
+
     if(state.disease) {
       document.getElementById('hospital-card').style.display = 'block';
       document.getElementById('disease-info').innerText = `ACİL: ${state.disease} teşhisi kondu! Tedavi olunmazsa sağlığın düşer.`;
@@ -1117,9 +1307,37 @@
     document.getElementById('stocks-container').innerHTML = stockHtml;
 
     let invHtml = '';
-    if (state.inventory.length === 0) invHtml = '<span style="font-size:11px; color:#8b949e;">Henüz hiç kıyafet veya eşya almadın.</span>';
+    if (state.inventory.length === 0) invHtml = '<span style="font-size:11px; color:#8b949e;">Envanteriniz boş. AVM\'den kıyafet veya çamaşır alın.</span>';
     else { state.inventory.slice().reverse().forEach(i => { invHtml += `<span class="inv-tag">${i.icon} ${i.name}</span>`; }); }
     document.getElementById('inventory-list').innerHTML = invHtml;
+
+    let slaveHtml = '';
+    document.getElementById('slave-count').innerText = state.asianSlaves.length;
+    if(state.asianSlaves.length === 0) slaveHtml = '<span style="font-size:11px; color:#8b949e;">Asya kölesi yok. Yeraltından sefer düzenle.</span>';
+    else {
+      state.asianSlaves.forEach((sl, sIdx) => {
+        slaveHtml += `
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#21262d; padding:6px; border-radius:4px; margin-bottom:4px;">
+            <div style="display:flex; gap:6px; align-items:center;"><img src="${sl.avatar}" style="width:28px;height:28px;border-radius:4px;"><strong>${sl.name} (Asya Kölesi)</strong></div>
+            <button class="btn-sm btn-buy" style="background:#bc8cff; color:black;" onclick="openPositionsModal('${sl.name}')">Yakınlaş</button>
+          </div>`;
+      });
+    }
+    document.getElementById('slaves-list').innerHTML = slaveHtml;
+
+    let widowHtml = '';
+    document.getElementById('widow-count').innerText = state.widows.length;
+    if(state.widows.length === 0) widowHtml = '<span style="font-size:11px; color:#8b949e;">Kontrolünde dul kadın yok. Dul Ağı uygulamasını aç.</span>';
+    else {
+      state.widows.forEach((wd, wIdx) => {
+        widowHtml += `
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#21262d; padding:6px; border-radius:4px; margin-bottom:4px;">
+            <div style="display:flex; gap:6px; align-items:center;"><img src="${wd.avatar}" style="width:28px;height:28px;border-radius:4px;"><strong>${wd.name} (${wd.method === 'tavla' ? 'Gönüllü' : 'Baskı Altında'})</strong></div>
+            <button class="btn-sm btn-buy" style="background:#ff79c6; color:black;" onclick="openPositionsModal('${wd.name}')">İlişki Kur</button>
+          </div>`;
+      });
+    }
+    document.getElementById('widows-list').innerHTML = widowHtml;
 
     let flirtHtml = '';
     state.flirts.forEach((f, idx) => {
@@ -1289,7 +1507,7 @@
         if(state.spouse.income) state.cash += state.spouse.income / 52;
       }
       state.cash += state.passiveIncome; 
-      state.cash += state.gangIncome / 52;
+      state.gangIncome / 52;
       
       state.businesses.forEach(b => {
         let t = state.bizTypes[b.typeIdx];
