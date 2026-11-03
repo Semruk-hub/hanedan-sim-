@@ -51,7 +51,7 @@
 
 <div class="container" id="start-screen">
   <h1>İmparatorluk Kur</h1>
-  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Evler, araç bakımları, hastalıklar ve genetik özelliklerle tam simülasyon.</p>
+  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Stres/Dinlenme, Bağımlılıklar, OnlyFans ve Gece Hayatıyla Tam Simülasyon.</p>
   <input type="text" id="char-name" placeholder="Karakter İsmi (Örn: Semruk)" autocomplete="off">
   <div style="display:flex; gap:10px; margin-bottom: 15px;">
     <select id="gender-select">
@@ -82,32 +82,36 @@
     <img id="avatar-display" class="profile-avatar" src="" alt="Profil">
     <div class="profile-info">
       <div><div class="stat-label">Profil</div><div class="stat-val blue" id="profile-display"></div></div>
-      <div><div class="stat-label">Sağlık / Karizma</div><div class="stat-val red" id="health-display"></div></div>
+      <div><div class="stat-label">Sağlık / Stres</div><div class="stat-val red" id="health-stress-display"></div></div>
       <div><div class="stat-label">Nakit</div><div class="stat-val green" id="cash"></div></div>
       <div><div class="stat-label">Zaman (Hafta)</div><div class="stat-val purple" id="time-display"></div></div>
-      <div><div class="stat-label">Saygınlık</div><div class="stat-val gold" id="rep"></div></div>
-      <div><div class="stat-label">Siyaset</div><div class="stat-val blue" id="politics-display">Yok</div></div>
+      <div><div class="stat-label">Sarhoşluk</div><div class="stat-val gold" id="drunk-display">0%</div></div>
+      <div><div class="stat-label">Korunma</div><div class="stat-val" id="protection-display"></div></div>
     </div>
   </div>
 
   <!-- HASTANE & SAĞLIK DURUMU -->
   <div class="card" id="hospital-card" style="display:none; border-color: #f85149;">
-    <h2 style="color: #f85149;">🏥 Hastane & Tedavi Paneli</h2>
+    <h2 style="color: #f85149;">🏥 Hastane & Sağlık Paneli</h2>
     <div class="row" style="border:none;">
       <div style="font-size:12px;" id="disease-info">Hastalık teşhis edildi!</div>
       <button class="btn-sm btn-buy" style="background:#f85149;" onclick="cureDisease()">Tedavi Ol ($15,000)</button>
     </div>
   </div>
 
-  <!-- AVM & ESTETİK -->
+  <!-- AVM & ESTETİK & MADDE PAKETLERİ -->
   <div class="card" style="border-color: #d29922;">
-    <h2 style="color: #d29922;">🛍️ Şehir AVM & Estetik Merkezi</h2>
+    <h2 style="color: #d29922;">🛍️ Şehir AVM, Estetik & Madde Pazarı</h2>
     <div class="row" style="border:none; margin:0;">
-      <div style="font-size:11px; color:#8b949e; flex:1;">Ev, lüks araç, sigorta, bakım ve estetik operasyonlar.</div>
+      <div style="font-size:11px; color:#8b949e; flex:1;">Alışveriş, estetik, sigara/alkol paketleri ve ağır uyuşturucular.</div>
       <div style="display:flex; gap:6px;">
         <button class="btn-action" style="background:#d29922; color:black; font-weight:bold;" onclick="openShop(null)">AVM</button>
         <button class="btn-action" style="background:#ff79c6; color:black; font-weight:bold;" onclick="openPlasticSurgery()">Estetik 💉</button>
       </div>
+    </div>
+    <div style="display:flex; gap:6px; margin-top:8px;">
+      <button class="btn-sm btn-buy" style="background:#238636;" onclick="openSubstancesModal()">💊 Madde & Bağımlılık Paneli</button>
+      <button class="btn-sm btn-action" style="background:#e1306c;" onclick="openOnlyFansModal()">📸 OnlyFans / Influencer</button>
     </div>
     <div id="inventory-list" class="scroll-box" style="max-height:70px; margin-top:8px;"></div>
   </div>
@@ -150,12 +154,20 @@
     <div id="children-list" class="scroll-box" style="max-height:120px;"></div>
   </div>
 
-  <!-- ÖZEL HAYAT -->
+  <!-- ÖZEL HAYAT & DİNLENME & GECE HAYATI -->
   <div class="card">
-    <h2><span>Özel Hayat & İhtiyaçlar</span> <button class="btn-sm btn-dark" onclick="toggleProtection()">Korunma: Açık</button></h2>
+    <h2><span>Özel Hayat & Dinlenme</span> <button class="btn-sm btn-dark" onclick="toggleProtection()">Korunma: Açık</button></h2>
     <div class="row">
-      <div><strong>Tatile Çık (Dinlen)</strong> <div style="font-size:10px; color:#8b949e;">Stresi azalt (-$2,000)</div></div>
-      <button class="btn-sm btn-buy" onclick="takeVacation()">+20% ❤️ Al</button>
+      <div><strong>Evde Dinlen / Uyku</strong> <div style="font-size:10px; color:#8b949e;">Stresi azalt, dinlen (+Stamina)</div></div>
+      <button class="btn-sm btn-buy" onclick="restAtHome()">Dinlen</button>
+    </div>
+    <div class="row">
+      <div><strong>Lüks Tatil / Spa</strong> <div style="font-size:10px; color:#8b949e;">Stresi sıfırla (-$2,000)</div></div>
+      <button class="btn-sm btn-buy" onclick="takeVacation()">Tatil Yap</button>
+    </div>
+    <div class="row">
+      <div><strong>🌙 Gece Hayatı & Hayat Kadını</strong> <div style="font-size:10px; color:#8b949e;">Rahatla, stres at (-$500)</div></div>
+      <button class="btn-sm btn-action" style="background:#ff4500;" onclick="nightLifeEncounter()">Eğlen</button>
     </div>
     <div class="row" style="border-bottom: none;">
       <div><strong>📱 Flört App (Sosyal Medya)</strong> <div style="font-size:10px; color:#8b949e;">Tanış, buluş, hediyeler gönder</div></div>
@@ -198,6 +210,37 @@
   <h1 style="color:#f85149;" id="death-reason">Vefat Ettin</h1>
   <p style="margin-bottom: 20px;">Mirası devralacak varisi seç:</p>
   <div id="heir-list"></div>
+</div>
+
+<!-- ONLYFANS / INFLUENCER MODALI -->
+<div id="of-modal" class="modal-overlay">
+  <div class="modal-content">
+    <h2 style="color:#e1306c;">📸 OnlyFans & Sosyal Medya <button class="btn-sm btn-sell" onclick="closeOnlyFansModal()">Kapat</button></h2>
+    <div style="font-size:12px; color:#8b949e; margin-bottom:12px;">Takipçi Sayısı: <span class="pink" id="of-followers">0</span> | Toplam Kazanç: <span class="green" id="of-earnings">$0</span></div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div class="row" style="background:#0d1117; padding:8px; border-radius:6px;">
+        <div><strong>Yeni Fotoğraf / İçerik Paylaş</strong><div style="font-size:10px; color:#8b949e;">Takipçi kitleni büyütür</div></div>
+        <button class="btn-sm btn-buy" style="background:#e1306c;" onclick="postContentOF()">İçerik Paylaş</button>
+      </div>
+      <div class="row" style="background:#0d1117; padding:8px; border-radius:6px;">
+        <div><strong>Takipçiye Özel İstek Karşıla</strong><div style="font-size:10px; color:#8b949e;">Abonelerden doğrudan bağış/gelir ($1,500)</div></div>
+        <button class="btn-sm btn-buy" onclick="customRequestOF()">İstek Karşıla</button>
+      </div>
+      <div class="row" style="background:#0d1117; padding:8px; border-radius:6px;">
+        <div><strong>Sadık Takipçiyle Özel Buluşma</strong><div style="font-size:10px; color:#8b949e;">VIP hayranla buluş (-$500 masraf, gelir elde et)</div></div>
+        <button class="btn-sm btn-buy" onclick="meetFanOF()">VIP Buluşma</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MADDE VE BAĞIMLILIK MODALI -->
+<div id="substances-modal" class="modal-overlay">
+  <div class="modal-content">
+    <h2 style="color:#238636;">💊 Madde & Bağımlılık Paneli <button class="btn-sm btn-sell" onclick="closeSubstancesModal()">Kapat</button></h2>
+    <div style="font-size:11px; color:#8b949e; margin-bottom:12px;">Stresini düşür ama sağlığına dikkat et!</div>
+    <div style="display:flex; flex-direction:column; gap:8px;" id="substances-list"></div>
+  </div>
 </div>
 
 <!-- EVENT / RASTGELE OLAY MODALI -->
@@ -258,6 +301,14 @@
   ];
   const allCategories = [...new Set(shopDb.map(i => i.cat))];
 
+  const substancesDb = [
+    {id:'sigara', name:'Sigara Paketi (20 Adet)', cost:100, stressRelief:15, healthCost:5, type:'legal', count:20},
+    {id:'alkol', name:'Viski Şişesi (Alkol)', cost:300, stressRelief:30, healthCost:10, drunkAdd:25, type:'legal', count:10},
+    {id:'esrar', name:'Esrar (Marijuana)', cost:500, stressRelief:55, healthCost:20, type:'illegal', count:5},
+    {id:'met', name:'Metamfetamin (Met)', cost:1200, stressRelief:85, healthCost:45, type:'illegal', count:3},
+    {id:'eroin', name:'Eroin / Ağır Madde', cost:2500, stressRelief:100, healthCost:70, type:'illegal', count:2}
+  ];
+
   const surgeries = [
     {id:1, name:"Botoks Enjeksiyonu", cost:2500, boost:5, risk:5},
     {id:2, name:"Burun Estetiği (Rinoplasti)", cost:12000, boost:15, risk:15},
@@ -295,8 +346,10 @@
   }
 
   let defaultState = {
-    charName: "", gender: "E", age: 18, week: 1, cash: 5000, reputation: 0, passiveIncome: 0, health: 100, beauty: 50,
+    charName: "", gender: "E", age: 18, week: 1, cash: 5000, reputation: 0, passiveIncome: 0, health: 100, stress: 10, beauty: 50, drunk: 0,
     office: "Sivil", gangPower: 0, gangIncome: 0, disease: null,
+    ofFollowers: 0, ofEarnings: 0,
+    inventorySubstances: {}, // { sigara: 20, alkol: 5, ... }
     avatarUrl: "https://i.ibb.co/6byg5Lw/avatar-giri-imci.png",
     protection: true, spouse: null, children: [], inventory: [],
     flirts: [], partners: [],
@@ -326,16 +379,20 @@
     box.innerHTML = `<div>> Yıl ${Math.floor(state.week/52)+1} (Hafta ${state.week}): ${msg}</div>` + box.innerHTML;
   }
 
-  function saveGame() { localStorage.setItem('dynastySave14', JSON.stringify(state)); }
-  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave14'); location.reload(); } }
+  function saveGame() { localStorage.setItem('dynastySave15', JSON.stringify(state)); }
+  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave15'); location.reload(); } }
 
   window.onload = function() {
-    let savedData = localStorage.getItem('dynastySave14');
+    let savedData = localStorage.getItem('dynastySave15');
     if (savedData) {
       state = JSON.parse(savedData);
       if(!state.office) state.office = "Sivil";
       if(state.gangPower === undefined) { state.gangPower = 0; state.gangIncome = 0; }
       if(state.disease === undefined) state.disease = null;
+      if(state.stress === undefined) state.stress = 10;
+      if(state.drunk === undefined) state.drunk = 0;
+      if(state.inventorySubstances === undefined) state.inventorySubstances = {};
+      if(state.ofFollowers === undefined) state.ofFollowers = 0;
       document.getElementById('start-screen').style.display = 'none';
       document.getElementById('main-ui').style.display = 'flex';
       render();
@@ -359,6 +416,125 @@
   function toggleFlirtApp() {
     let app = document.getElementById('flirt-app-container');
     app.style.display = app.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // OnlyFans / Influencer Modalı
+  function openOnlyFansModal() {
+    document.getElementById('of-modal').style.display = 'flex';
+    document.getElementById('of-followers').innerText = state.ofFollowers.toLocaleString();
+    document.getElementById('of-earnings').innerText = `$${Math.floor(state.ofEarnings).toLocaleString()}`;
+  }
+  function closeOnlyFansModal() { document.getElementById('of-modal').style.display = 'none'; }
+
+  function postContentOF() {
+    let newF = Math.floor(500 + Math.random() * 2000);
+    state.ofFollowers += newF;
+    let earned = Math.floor(newF * 0.5);
+    state.cash += earned;
+    state.ofEarnings += earned;
+    log(`OnlyFans'ta yeni fotoğraf paylaştın! +${newF} takipçi kazandın ve $${earned} gelir elde ettin 📸`);
+    openOnlyFansModal(); render();
+  }
+
+  function customRequestOF() {
+    if(state.ofFollowers < 1000) { alert("Özel istek almak için en az 1,000 takipçin olmalı!"); return; }
+    let earned = 1500;
+    state.cash += earned;
+    state.ofEarnings += earned;
+    state.stress = Math.max(0, state.stress - 5);
+    log(`Bir abonenin özel isteğini yerine getirdin ve $${earned} kazandın.`);
+    openOnlyFansModal(); render();
+  }
+
+  function meetFanOF() {
+    if(state.cash < 500) { alert("VIP buluşma için $500 lazım!"); return; }
+    state.cash -= 500;
+    let earned = 3000;
+    state.cash += earned;
+    state.ofEarnings += earned;
+    state.stress = Math.max(0, state.stress - 15);
+    log(`Sadık bir VIP hayranınla buluştun, harika vakit geçirdin ve $${earned} bağış aldın! 🥂`);
+    openOnlyFansModal(); render();
+  }
+
+  // Madde / Bağımlılık Paneli
+  function openSubstancesModal() {
+    document.getElementById('substances-modal').style.display = 'flex';
+    let html = '';
+    substancesDb.forEach(sub => {
+      let owned = state.inventorySubstances[sub.id] || 0;
+      html += `
+        <div class="row" style="background:#0d1117; padding:8px; border-radius:6px;">
+          <div>
+            <strong>${sub.name}</strong>
+            <div style="font-size:10px; color:#8b949e;">Paket Fiyatı: $${sub.cost} | Stok: ${owned} Adet</div>
+          </div>
+          <div style="display:flex; gap:4px;">
+            <button class="btn-sm btn-buy" onclick="buySubstance('${sub.id}')">Satın Al</button>
+            ${owned > 0 ? `<button class="btn-sm btn-action" style="background:#238636;" onclick="useSubstance('${sub.id}')">Kullan</button>` : ''}
+          </div>
+        </div>`;
+    });
+    document.getElementById('substances-list').innerHTML = html;
+  }
+  function closeSubstancesModal() { document.getElementById('substances-modal').style.display = 'none'; }
+
+  function buySubstance(id) {
+    let sub = substancesDb.find(x => x.id === id);
+    if(state.cash < sub.cost) { alert("Yeterli paran yok!"); return; }
+    state.cash -= sub.cost;
+    state.inventorySubstances[id] = (state.inventorySubstances[id] || 0) + sub.count;
+    log(`${sub.name} satın aldın (-$${sub.cost}).`);
+    openSubstancesModal(); render();
+  }
+
+  function useSubstance(id) {
+    let sub = substancesDb.find(x => x.id === id);
+    if(!state.inventorySubstances[id] || state.inventorySubstances[id] <= 0) { alert("Stokta kalmadı!"); return; }
+    state.inventorySubstances[id]--;
+    
+    state.stress = Math.max(0, state.stress - sub.stressRelief);
+    state.health = Math.max(0, state.health - sub.healthCost);
+    if(sub.drunkAdd) {
+      state.drunk = Math.min(100, state.drunk + sub.drunkAdd);
+    }
+    
+    // Ağır maddelerde ölüm riski
+    if(sub.type === 'illegal' && Math.random() < 0.15) {
+      state.health = 0;
+      log(`⚠️ AŞIRI DOZ (OVERDOSE)! ${sub.name} kullandıktan sonra kalbin durdu.`);
+    } else {
+      log(`${sub.name} kullandın. Stresin düştü (-${sub.stressRelief}%), sağlığın etkilendi (-${sub.healthCost}%).`);
+    }
+    closeSubstancesModal(); render();
+  }
+
+  // Gece Hayatı & Hayat Kadını Mekaniği
+  function nightLifeEncounter() {
+    if(state.cash < 500) { alert("Gece hayatı için en az $500 lazım!"); return; }
+    state.cash -= 500;
+    state.stress = Math.max(0, state.stress - 35);
+    log("Gece kulübünde hayat kadınıyla keyifli vakit geçirdin, tüm stresini attın (-$500, Stres azaldı).");
+    
+    // Korunma kapalıysa hastalık veya çocuk riski
+    if(!state.protection) {
+      if(Math.random() < 0.40) {
+        let stds = ["Hiv / AIDS", "Frengi", "Bel Soğukluğu"];
+        state.disease = stds[Math.floor(Math.random() * stds.length)];
+        log(`⚠️ DİKKAT! Korunmasız ilişki sonrası ${state.disease} kaptın! Hastaneye gitmelisin.`);
+      }
+      if(Math.random() < 0.30) {
+        haveChild(true, "Gece Hayatı Temaslısı");
+      }
+    }
+    render();
+  }
+
+  function restAtHome() {
+    state.stress = Math.max(0, state.stress - 20);
+    state.health = Math.min(100, state.health + 5);
+    log("Evinde rahatça dinlendin, stresin azaldı.");
+    render();
   }
 
   function openShop(targetIdx) {
@@ -400,9 +576,9 @@
         let haftalikKira = (item.cost * 0.08) / 52;
         state.passiveIncome += haftalikKira;
         state.reputation += Math.floor(item.cost / 20000);
-        log(`Kendine ${item.icon} ${item.name} aldın! (+Kira Geliri ve Konfor Sağlandı)`);
+        log(`Kendine ${item.icon} ${item.name} aldın! (+Kira Geliri ve Konfor)`);
       } else if(item.cat === 'Araç') {
-        log(`Kendine lüks ${item.icon} ${item.name} aldın! Bakım ve sigortası başlatıldı.`);
+        log(`Kendine lüks ${item.icon} ${item.name} aldın!`);
       } else {
         state.reputation += Math.floor(item.cost / 10000);
         state.beauty = Math.min(100, state.beauty + 1);
@@ -597,7 +773,7 @@
   }
 
   function takeVacation() {
-    if(state.cash >= 2000) { state.cash -= 2000; state.health = Math.min(100, state.health + 20); log("Tatil yapıldı (+20% ❤️)."); render(); }
+    if(state.cash >= 2000) { state.cash -= 2000; state.health = Math.min(100, state.health + 20); state.stress = 0; log("Lüks tatil yapıldı (Stres sıfırlandı, +20% ❤️)."); render(); }
   }
   function toggleProtection() { state.protection = !state.protection; render(); }
 
@@ -611,16 +787,16 @@
   function render() {
     document.getElementById('avatar-display').src = state.avatarUrl;
     document.getElementById('profile-display').innerText = `${state.charName} (${state.age}y)`;
-    document.getElementById('health-display').innerText = `${state.health}% ❤️ / %${state.beauty} ✨`;
+    document.getElementById('health-stress-display').innerText = `${state.health}% ❤️ / Stres:%${Math.floor(state.stress)}`;
     document.getElementById('cash').innerText = `$${Math.floor(state.cash).toLocaleString()}`;
     document.getElementById('time-display').innerText = `Yıl ${Math.floor(state.week/52)+1} (H.${state.week%52 || 52})`;
-    document.getElementById('rep').innerText = `${state.rep || state.reputation} ⭐`;
+    document.getElementById('rep').innerText = `${state.reputation} ⭐`;
+    document.getElementById('drunk-display').innerText = `${state.drunk}%`;
     document.getElementById('politics-display').innerText = state.office;
 
-    // Hastane Paneli Kontrolü
     if(state.disease) {
       document.getElementById('hospital-card').style.display = 'block';
-      document.getElementById('disease-info').innerText = `ACİL: ${state.disease} teşhisi kondu! Tedavi olunmazsa sağlığın hızla düşer.`;
+      document.getElementById('disease-info').innerText = `ACİL: ${state.disease} teşhisi kondu! Tedavi olunmazsa sağlığın düşer.`;
     } else {
       document.getElementById('hospital-card').style.display = 'none';
     }
@@ -685,7 +861,7 @@
       childHtml += `
         <div style="background:#21262d; padding:6px; border-radius:4px; margin-bottom:6px; font-size:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span>${gIcon} <strong>${c.name}</strong> ${tag} (Yaş: ${c.age}) | Zeka: ${c.intelligence} | Hırs: ${c.ambition}</span>
+            <span>${gIcon} <strong>${c.name}</strong> ${tag} (Yaş: ${c.age}) | Zeka: ${c.intelligence}</span>
             <div style="display:flex; gap:4px;">
               ${!c.educated ? `<button class="btn-sm btn-buy" onclick="educateChild(${cIdx}, 'lise')">Lise</button><button class="btn-sm btn-buy" onclick="educateChild(${cIdx}, 'uni')">Üni</button>` : ''}
               ${state.businesses.length > 0 && !c.workingBiz ? `<button class="btn-sm btn-action" onclick="assignChildToBiz(${cIdx}, 0)">CEO</button>` : ''}
@@ -710,7 +886,7 @@
   }
 
   function commitCrime(type) {
-    state.health -= 12; 
+    state.stress += 15; 
     if(type === 'colombia') {
       if(Math.random() < 0.60) {
         let megaBribe = 300000;
@@ -738,13 +914,12 @@
     let names = cGender === 'E' ? ["Ali", "Mert", "Can", "Bora"] : ["Ayşe", "Zeynep", "Ece", "Lara"];
     let name = names[Math.floor(Math.random() * names.length)];
     let parentIntel = Math.floor(50 + Math.random() * 40);
-    let parentAmbition = Math.floor(40 + Math.random() * 50);
     
     state.children.push({ 
       name: name, age: 0, isBastard: isBastard, gender: cGender, 
-      intelligence: parentIntel, ambition: parentAmbition, educated: null, workingBiz: null 
+      intelligence: parentIntel, educated: null, workingBiz: null 
     });
-    log(isBastard ? `Skandal! ${partnerName} ile kaçamaktan çocuğun oldu: ${name} (Genetik Zeka: ${parentIntel})` : `Bir çocuğunuz oldu: ${name}`);
+    log(isBastard ? `Skandal! ${partnerName} ile kaçamaktan çocuğun oldu: ${name}` : `Bir çocuğunuz oldu: ${name}`);
     render();
   }
 
@@ -774,29 +949,36 @@
       if (checkDeath()) return;
       state.week += 1;
       
-      // Ev konforunun sağlık ve strese haftalık etkisi
+      // Stres ve konfor hesaplamaları
       let evVarmi = state.inventory.some(i => i.cat === 'Emlak');
-      let saglikYenileme = evVarmi ? 0.3 : -0.2;
-      state.health = Math.min(100, Math.max(0, state.health + saglikYenileme));
+      let konforEtkisi = evVarmi ? 1.0 : 2.5;
+      state.stress = Math.min(100, state.stress + konforEtkisi);
 
-      // Hastalık tetiklenme şansı (%1)
-      if (!state.disease && Math.random() < 0.01) {
+      if (state.stress > 80) {
+        state.health -= 0.5; // Yüksek stres sağlığı yerle bir eder
+      }
+
+      // Sarhoşluk zamanla azalır
+      if(state.drunk > 0) state.drunk = Math.max(0, state.drunk - 5);
+
+      // Hastalık kontrolü
+      if (!state.disease && Math.random() < 0.008) {
         let diseases = ["Grip", "Kronik Yorgunluk", "Kalp Ritmi Bozukluğu", "Depresyon"];
         state.disease = diseases[Math.floor(Math.random() * diseases.length)];
         log(`⚠️ SAĞLIK UYARISI: Doktorlar sana ${state.disease} teşhisi koydu! Hastaneye gitmelisin.`);
       }
 
       if (state.disease) {
-        state.health -= 1.5; // Hastalık tedavi edilmezse sağlığı yerle bir eder
+        state.health -= 1.5;
       }
 
-      // Araç bakım masrafı ve kaza ihtimali
+      // Araç kaza riski
       let arabaVarmi = state.inventory.some(i => i.cat === 'Araç');
-      if (arabaVarmi && Math.random() < 0.005) {
+      if (arabaVarmi && Math.random() < 0.004) {
         let tamirMasrafi = 5000;
         state.cash -= tamirMasrafi;
         state.health -= 10;
-        log(`💥 TRAFİK KAZASI! Lüks aracınla kaza yaptın. Tamir masrafı ve hastane: -$${tamirMasrafi}, -10% ❤️`);
+        log(`💥 TRAFİK KAZASI! Lüks aracınla kaza yaptın (-$${tamirMasrafi}, -10% ❤️).`);
       }
 
       if (Math.random() < 0.04) { triggerRandomEvent(); return; }
@@ -840,7 +1022,9 @@
     state.week = heir.age * 52;
     state.generation += 1; 
     state.health = 100; 
+    state.stress = 10;
     state.beauty = 50;
+    state.drunk = 0;
     state.office = "Sivil";
     state.disease = null;
     state.spouse = null; 
