@@ -568,14 +568,14 @@
 
   function log(msg) {
     const box = document.getElementById('log');
-    box.innerHTML = `<div>> Yıl ${Math.floor(state.week/52)+1} (Hafta ${state.week}): ${msg}</div>` + box.innerHTML;
+    box.innerHTML = `<div>> Yıl ${Math.floor(state.week/52)+1} (Hafta ${state.week%52 || 52}): ${msg}</div>` + box.innerHTML;
   }
 
-  function saveGame() { localStorage.setItem('dynastySave39', JSON.stringify(state)); }
-  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave39'); location.reload(); } }
+  function saveGame() { localStorage.setItem('dynastySave40', JSON.stringify(state)); }
+  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave40'); location.reload(); } }
 
   window.onload = function() {
-    let savedData = localStorage.getItem('dynastySave39');
+    let savedData = localStorage.getItem('dynastySave40');
     if (savedData) {
       state = JSON.parse(savedData);
       if(!state.office) state.office = "Sivil";
@@ -832,14 +832,14 @@
     let html = '';
     playmatesDb.forEach(pm => {
       let canMarry = state.beauty >= pm.minBeauty && (state.office === 'Belediye Başkanı' || state.reputation >= 100);
-      let marryBtn = canMarry ? `<button class="btn-sm btn-buy" style="background:#238636;" onclick="marryPlaymate('${pm.name}', '${pm.avatar}')">Evlen</button>` : `<span style="font-size:10px; color:#f85149;">Şartlar Yetersiz (Karizma %${pm.minBeauty}+ & Başkan)</span>`;
+      let marryBtn = canMarry ? `<button class="btn-sm btn-buy" style="background:#238636;" onclick="marryPlaymate('${pm.name}', '${pm.avatar}')">Evlen</button>` : `<span style="font-size:10px; color:#f85149;">Şartlar Yetersiz</span>`;
       html += `
         <div class="row" style="background:#0d1117; padding:8px; border-radius:6px; align-items:center;">
           <div style="display:flex; gap:8px; align-items:center;">
             <img src="${pm.avatar}" style="width:36px; height:36px; border-radius:4px; background:#21262d;">
             <div>
               <strong>${pm.name} (${pm.title})</strong>
-              <div style="font-size:10px; color:#8b949e;">Gereksinim: %${pm.minBeauty} Karizma & Başkanlık/Yüksek Şöhret | Buluşma: $${pm.cost.toLocaleString()}</div>
+              <div style="font-size:10px; color:#8b949e;">Gereksinim: %${pm.minBeauty} Karizma & Başkan | Buluşma: $${pm.cost.toLocaleString()}</div>
             </div>
           </div>
           <div style="display:flex; gap:4px; align-items:center;">
@@ -1181,10 +1181,97 @@
     render();
   }
 
+  function advanceWeeks(weeks) {
+    for (let i = 0; i < weeks; i++) {
+      if (checkDeath()) return;
+      state.week += 1;
+      
+      let evVarmi = state.inventory.some(i => i.cat === 'Emlak');
+      let konforEtkisi = evVarmi ? 1.0 : 2.5;
+      state.stress = Math.min(100, state.stress + konforEtkisi);
+
+      if (state.stress > 80) { state.health -= 0.5; }
+      if(state.drunk > 0) state.drunk = Math.max(0, state.drunk - 5);
+
+      if (!state.disease && Math.random() < 0.008) {
+        let diseases = ["Grip", "Kronik Yorgunluk", "Kalp Ritmi Bozukluğu", "Depresyon"];
+        state.disease = diseases[Math.floor(Math.random() * diseases.length)];
+        log(`⚠️ SAĞLIK UYARISI: Doktorlar sana ${state.disease} teşhisi koydu! Hastaneye gitmelisin.`);
+      }
+
+      if (state.disease) { state.health -= 1.5; }
+
+      let arabaVarmi = state.inventory.some(i => i.cat === 'Araç');
+      if (arabaVarmi && Math.random() < 0.004) {
+        let tamirMasrafi = 5000;
+        state.cash -= tamirMasrafi;
+        state.health -= 10;
+        log(`💥 TRAFİK KAZASI! Lüks aracınla kaza yaptın (-$${tamirMasrafi}, -10% ❤️).`);
+      }
+
+      if (Math.random() < 0.04) { triggerRandomEvent(); return; }
+
+      if (state.week % 52 === 0) {
+        state.age += 1;
+        state.children.forEach(c => c.age += 1);
+      }
+      
+      if (state.spouse) { 
+        let haftalikMasraf = (state.spouse.cost * 500) / 52;
+        state.cash -= haftalikMasraf; 
+        if(state.spouse.income) state.cash += state.spouse.income / 52;
+      }
+      state.cash += state.passiveIncome; 
+      state.cash += state.gangIncome / 52;
+      
+      state.businesses.forEach(b => {
+        let t = state.bizTypes[b.typeIdx];
+        state.cash += (t.baseInc + (b.employees * t.empBoost) - (b.employees * t.empCost)) / 52;
+      });
+
+      state.stocks.forEach(s => {
+        s.price = Math.max(5, s.price * (1 + ((Math.random() * (s.vol * 2)) - s.vol) / 10));
+      });
+    }
+    if (!checkDeath()) render();
+  }
+
+  function nextWeek() {
+    advanceWeeks(1);
+    saveGame(); 
+  }
+
+  function selectHeir(index) {
+    let heir = state.children[index];
+    state.charName = heir.name;
+    state.gender = heir.gender; 
+    state.age = heir.age; 
+    state.week = heir.age * 52;
+    state.generation += 1; 
+    state.health = 100; 
+    state.stress = 10;
+    state.beauty = 50;
+    state.drunk = 0;
+    state.office = "Sivil";
+    state.disease = null;
+    state.spouse = null; 
+    state.children = [];
+    state.flirts = generateFlirts(state.gender);
+    state.partners = generatePartners(state.gender);
+    
+    let avatars = ["https://i.ibb.co/6byg5Lw/avatar-giri-imci.png", "https://i.ibb.co/VMyhV6R/avatar-suco-ortagi.png", "https://i.ibb.co/bW8C9g4/avatar-hacker.png"];
+    state.avatarUrl = heir.isBastard ? avatars[1] : avatars[Math.floor(Math.random() * avatars.length)];
+    
+    document.getElementById('death-screen').style.display = 'none';
+    document.getElementById('main-ui').style.display = 'flex';
+    log(`İmparatorluk ${state.charName} (${state.gender}) yönetimine geçti!`);
+    saveGame(); render();
+  }
+
   function render() {
     document.getElementById('avatar-display').src = state.avatarUrl;
     document.getElementById('profile-display').innerText = `${state.charName} (${state.age}y)`;
-    document.getElementById('health-stress-display').innerText = `${state.health}% ❤️ / %${Math.floor(state.stress)}`;
+    document.getElementById('health-stress-display').innerText = `${Math.floor(state.health)}% ❤️ / %${Math.floor(state.stress)}`;
     document.getElementById('cash').innerText = `$${Math.floor(state.cash).toLocaleString()}`;
     document.getElementById('time-display').innerText = `Yıl ${Math.floor(state.week/52)+1} (H.${state.week%52 || 52})`;
     document.getElementById('rep').innerText = `${state.reputation} ⭐`;
