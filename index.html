@@ -60,7 +60,7 @@
 
 <div class="container" id="start-screen">
   <h1>İmparatorluk Kur</h1>
-  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Dul kadınlar ağı, swinger, DarkWeb ve tam simülasyon.</p>
+  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Magazin skandalları, zorlu ünlü evlilikleri ve tam simülasyon.</p>
   <input type="text" id="char-name" placeholder="Karakter İsmi (Örn: Semruk)" autocomplete="off">
   <div style="display:flex; gap:10px; margin-bottom: 15px;">
     <select id="gender-select">
@@ -176,7 +176,7 @@
     <!-- DUL KADINLARIM KASASI -->
     <div class="card" style="border-color: #ff79c6;">
       <h2 style="color: #ff79c6;">🥀 Kontrolün Altındaki Dul Kadınlar (<span id="widow-count">0</span> Kişi)</h2>
-      <div style="font-size:11px; color:#8b949e; margin-bottom:8px;">Ağ üzerinden tavlayıp veya baskıyla bağladığın dul kadınlar:</div>
+      <div style="font-size:11px; color:#8b949e; margin-bottom:8px;">Ağ üzerinden bağladığın dul kadınlar:</div>
       <div id="widows-list" class="scroll-box" style="max-height:120px;"></div>
     </div>
 
@@ -240,7 +240,7 @@
       <div style="display:flex; gap:6px; margin-top:8px;">
         <button class="btn-sm btn-buy" style="background:#238636;" onclick="openSubstancesModal()">💊 Madde</button>
         <button class="btn-sm btn-action" style="background:#e1306c;" onclick="openOnlyFansModal()">📸 OnlyFans</button>
-        <button class="btn-sm btn-action" style="background:#a371f7;" onclick="openPlaymatesModal()">🌟 VIP Playmates</button>
+        <button class="btn-sm btn-action" style="background:#a371f7;" onclick="openPlaymatesModal()">🌟 VIP Playmates (Zorlu Evlilikler)</button>
       </div>
       <div id="inventory-list" class="scroll-box" style="max-height:120px; margin-top:8px;"></div>
     </div>
@@ -350,8 +350,8 @@
 <!-- VIP PLAYMATES MODALI -->
 <div id="playmates-modal" class="modal-overlay">
   <div class="modal-content">
-    <h2 style="color:#a371f7;">🌟 VIP Playmates & VS Mankenleri <button class="btn-sm btn-sell" onclick="closePlaymatesModal()">Kapat</button></h2>
-    <div style="font-size:11px; color:#8b949e; margin-bottom:12px;">Dünyaca ünlü ikonik modellerle özel etkileşimler.</div>
+    <h2 style="color:#a371f7;">🌟 VIP Playmates & Zorlu Evlilikler <button class="btn-sm btn-sell" onclick="closePlaymatesModal()">Kapat</button></h2>
+    <div style="font-size:11px; color:#8b949e; margin-bottom:12px;">Dünyaca ünlü ikonik modeller (Gereksinim: %90+ Karizma & Belediye Başkanlığı/Yüksek Şöhret):</div>
     <div style="flex-grow:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;" id="playmates-list"></div>
   </div>
 </div>
@@ -463,11 +463,11 @@
   ];
 
   const playmatesDb = [
-    { name: "Adriana L.", title: "VS Süpermodel", cost: 5000, avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Adriana" },
-    { name: "Candice S.", title: "Kapak Güzeli", cost: 6000, avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Candice" },
-    { name: "Barbara P.", title: "İkonik Model", cost: 7500, avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Barbara" },
-    { name: "Emily R.", title: "Playmates İkonu", cost: 9000, avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Emily" },
-    { name: "Kendall J.", title: "Dünya Yıldızı", cost: 15000, avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Kendall" }
+    { name: "Adriana L.", title: "VS Süpermodel", cost: 15000, minBeauty: 90, avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Adriana" },
+    { name: "Candice S.", title: "Kapak Güzeli", cost: 18000, minBeauty: 90, avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Candice" },
+    { name: "Barbara P.", title: "İkonik Model", cost: 20000, minBeauty: 92, avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Barbara" },
+    { name: "Emily R.", title: "Playmates İkonu", cost: 25000, minBeauty: 95, avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Emily" },
+    { name: "Kendall J.", title: "Dünya Yıldızı", cost: 35000, minBeauty: 98, avatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Kendall" }
   ];
 
   const swingerProfiles = [
@@ -541,7 +541,7 @@
     inventorySubstances: {},
     usedFetishInventory: [],
     asianSlaves: [],
-    widows: [], // DUL KADINLAR KASASI
+    widows: [],
     avatarUrl: "https://i.ibb.co/6byg5Lw/avatar-giri-imci.png",
     protection: true, spouse: null, children: [], inventory: [],
     flirts: [], partners: [],
@@ -571,11 +571,11 @@
     box.innerHTML = `<div>> Yıl ${Math.floor(state.week/52)+1} (Hafta ${state.week}): ${msg}</div>` + box.innerHTML;
   }
 
-  function saveGame() { localStorage.setItem('dynastySave35', JSON.stringify(state)); }
-  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave35'); location.reload(); } }
+  function saveGame() { localStorage.setItem('dynastySave36', JSON.stringify(state)); }
+  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave36'); location.reload(); } }
 
   window.onload = function() {
-    let savedData = localStorage.getItem('dynastySave35');
+    let savedData = localStorage.getItem('dynastySave36');
     if (savedData) {
       state = JSON.parse(savedData);
       if(!state.office) state.office = "Sivil";
@@ -648,7 +648,6 @@
     render();
   }
 
-  // DUL KADINLAR UYGULAMASI
   function openWidowsAppModal() {
     document.getElementById('widows-modal').style.display = 'flex';
     let namesSample = ["Berrin", "Nermin", "Füsun", "Jale", "Gönül", "Serap", "Lale", "Necla"];
@@ -747,7 +746,7 @@
         html += `
           <button class="action-btn" style="background:#21262d; border:1px solid #30363d; color:#c9d1d9; text-align:left; padding:10px;" onclick="useUnderwearFetish(${idx}, '${uw.name}', '${uw.icon}', ${uw.cost})">
             <strong>${uw.icon} ${uw.name} Üzerinde Boşal</strong>
-            <div style="font-size:10px; color:#3fb950;">Stres Azaltma: -30% | DarkWeb Kasasına Aktarılacak</div>
+            <div style="font-size:10px; color:#3fb950;">Stres Azaltma: -30% | DarkWeb Kasasına Değerli Olarak Aktarılacak</div>
           </button>`;
       });
     }
@@ -832,18 +831,19 @@
     document.getElementById('playmates-modal').style.display = 'flex';
     let html = '';
     playmatesDb.forEach(pm => {
+      let canMarry = state.beauty >= pm.minBeauty && (state.office === 'Belediye Başkanı' || state.reputation >= 100);
       html += `
         <div class="row" style="background:#0d1117; padding:8px; border-radius:6px; align-items:center;">
           <div style="display:flex; gap:8px; align-items:center;">
             <img src="${pm.avatar}" style="width:36px; height:36px; border-radius:4px; background:#21262d;">
             <div>
-              <strong>${pm.name}</strong>
-              <div style="font-size:10px; color:#8b949e;">${pm.title} | Buluşma: $${pm.cost}</div>
+              <strong>${pm.name} (${pm.title})</strong>
+              <div style="font-size:10px; color:#8b949e;">Gereksinim: %${pm.minBeauty} Karizma & Başkanlık/Yüksek Şöhret | Bedel: $${pm.cost.toLocaleString()}</div>
             </div>
           </div>
           <div style="display:flex; gap:4px;">
-            <button class="btn-sm btn-buy" style="background:#a371f7;" onclick="interactPlaymate('${pm.name}', ${pm.cost})">Buluş & Yakınlaş</button>
-            ${!state.spouse ? `<button class="btn-sm btn-buy" style="background:#238636;" onclick="marryPlaymate('${pm.name}', '${pm.avatar}')">Evlen</button>` : ''}
+            <button class="btn-sm btn-buy" style="background:#a371f7;" onclick="interactPlaymate('${pm.name}', ${pm.cost})">Buluş ($${pm.cost})</button>
+            ${(!state.spouse && canMarry) ? `<button class="btn-sm btn-buy" style="background:#238636;" onclick="marryPlaymate('${pm.name}', '${pm.avatar}')">Evlen</button>` : ''}
           </div>
         </div>`;
     });
@@ -854,15 +854,19 @@
   function interactPlaymate(name, cost) {
     if(state.cash < cost) { alert("Yeterli paran yok!"); return; }
     state.cash -= cost;
-    state.reputation += 5;
+    state.reputation += 10;
     closePlaymatesModal();
     openPositionsModal(name);
   }
 
   function marryPlaymate(name, avatar) {
-    state.spouse = { type: name, cost: 2000, repBoost: 40, income: 0, avatar: avatar };
-    state.reputation += 40;
-    log(`Magazin dünyası şokta! ${name} ile muhteşem bir törenle evlendin! (+40⭐)`);
+    if(state.beauty < 90 || (state.office !== 'Belediye Başkanı' && state.reputation < 100)) {
+      alert("Şartlar yetersiz! Ünlü biriyle evlenmek için en az %90 karizma ve Belediye Başkanı/Yüksek Şöhret olmalısın!");
+      return;
+    }
+    state.spouse = { type: name, cost: 25000, repBoost: 80, income: 0, avatar: avatar };
+    state.reputation += 80;
+    log(`Magazin dünyası sarsıldı! Dünyaca ünlü ${name} ile muhteşem bir törenle evlendin! (+80⭐)`);
     closePlaymatesModal(); render();
   }
 
@@ -1093,6 +1097,46 @@
     render();
   }
 
+  function triggerScandalEvent() {
+    if(!state.spouse) return;
+    let scandalBribe = 100000;
+    document.getElementById('event-title').innerText = "📸 MAGAZİN BOMBASI: SKANDAL!";
+    document.getElementById('event-desc').innerText = `Paparaziler ${state.spouse.type} ile olan gizli yeraltı ilişkilerini ve darkweb bağlantılarını fotoğrafladı! Manşetlerde adın geçiyor.`;
+    
+    let btnHtml = `
+      <button class="action-btn" style="background:#238636; color:white;" onclick="resolveScandal(true, ${scandalBribe})">Sus Payı Öde ($${scandalBribe.toLocaleString()})</button>
+      <button class="action-btn" style="background:#da3633; color:white;" onclick="resolveScandal(false, 0)">İnkar Et (Mahkemelik Ol)</button>
+    `;
+    document.getElementById('event-buttons').innerHTML = btnHtml;
+    document.getElementById('event-modal').style.display = 'flex';
+  }
+
+  function resolveScandal(bribe, amount) {
+    document.getElementById('event-modal').style.display = 'none';
+    if(bribe) {
+      if(state.cash >= amount) {
+        state.cash -= amount;
+        log("Medya patronlarına rüşvet verip skandalı örttün, magazin kapandı 🤫");
+      } else {
+        state.cash = 0;
+        state.reputation -= 30;
+        log("Paran yetmediği için rüşvet patladı! Eşin seni terk etti ve servetine el koydu.");
+        state.spouse = null;
+      }
+    } else {
+      if(Math.random() < 0.4) {
+        state.reputation += 20;
+        log("Basın karşısında iddiaları yalanladın, halk inandı ve şöhretin arttı!");
+      } else {
+        state.cash = Math.floor(state.cash * 0.7); // Servetin %30'u gider
+        state.reputation -= 50;
+        log(`Mahkemeyi kaybettin! ${state.spouse.type} skandal nedeniyle boşanma davası açtı ve servetinin bir kısmı nafaka olarak gitti.`);
+        state.spouse = null;
+      }
+    }
+    render();
+  }
+
   function buyStock(id) {
     let s = state.stocks.find(x => x.id === id);
     if(state.cash >= s.price) { state.cash -= s.price; s.owned++; render(); }
@@ -1165,6 +1209,10 @@
   }
 
   function triggerRandomEvent() {
+    if(state.spouse && Math.random() < 0.3) {
+      triggerScandalEvent();
+      return;
+    }
     let events = [
       {
         title: "Vergi Denetimi Şoku!",
