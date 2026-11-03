@@ -15,8 +15,8 @@
     .profile-info { flex-grow: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center; }
     
     .stat-label { font-size: 10px; color: #8b949e; text-transform: uppercase; }
-    .stat-val { font-size: 13px; font-weight: bold; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-    .green { color: #3fb950; } .red { color: #f85149; } .gold { color: #d29922; } .blue { color: #58a6ff; } .purple { color: #bc8cff; }
+    .stat-val { font-size: 12px; font-weight: bold; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+    .green { color: #3fb950; } .red { color: #f85149; } .gold { color: #d29922; } .blue { color: #58a6ff; } .purple { color: #bc8cff; } .pink { color: #ff79c6; }
 
     h2 { font-size: 13px; margin-bottom: 8px; color: #8b949e; border-bottom: 1px solid #30363d; padding-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
     
@@ -33,13 +33,12 @@
 
     #log { height: 90px; overflow-y: auto; font-family: monospace; font-size: 11px; color: #8b949e; display: flex; flex-direction: column; gap: 3px; }
     .scroll-box { max-height: 180px; overflow-y: auto; padding-right: 4px; }
-    .flirt-box { max-height: 280px; overflow-y: auto; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 8px; margin-top: 8px; display: none; }
+    .flirt-box { max-height: 250px; overflow-y: auto; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 8px; margin-top: 8px; display: none; }
 
-    #start-screen, #death-screen { display: none; text-align: center; margin-top: 50px; }
+    #start-screen, #death-screen, #event-modal { display: none; text-align: center; margin-top: 50px; }
     h1 { margin-bottom: 15px; }
     .heir-btn { background: #238636; color: white; border: none; padding: 10px; width: 100%; margin: 5px 0; border-radius: 6px; cursor: pointer; font-size: 14px; }
 
-    /* AVM Modal */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 10px; }
     .modal-content { background: #161b22; border: 1px solid #30363d; border-radius: 8px; width: 100%; max-width: 480px; height: 85vh; display: flex; flex-direction: column; padding: 12px; }
     .cat-btn { background: #21262d; border: 1px solid #30363d; color: #8b949e; padding: 6px 10px; border-radius: 15px; font-size: 11px; cursor: pointer; white-space: nowrap; }
@@ -52,7 +51,7 @@
 
 <div class="container" id="start-screen">
   <h1>İmparatorluk Kur</h1>
-  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Hem yeraltında hem de ticaret dünyasında zirveye çık.</p>
+  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Evler, araç bakımları, hastalıklar ve genetik özelliklerle tam simülasyon.</p>
   <input type="text" id="char-name" placeholder="Karakter İsmi (Örn: Semruk)" autocomplete="off">
   <div style="display:flex; gap:10px; margin-bottom: 15px;">
     <select id="gender-select">
@@ -83,73 +82,109 @@
     <img id="avatar-display" class="profile-avatar" src="" alt="Profil">
     <div class="profile-info">
       <div><div class="stat-label">Profil</div><div class="stat-val blue" id="profile-display"></div></div>
-      <div><div class="stat-label">Sağlık</div><div class="stat-val red" id="health-display"></div></div>
+      <div><div class="stat-label">Sağlık / Karizma</div><div class="stat-val red" id="health-display"></div></div>
       <div><div class="stat-label">Nakit</div><div class="stat-val green" id="cash"></div></div>
-      <div><div class="stat-label">Kuşak</div><div class="stat-val purple" id="generation-display"></div></div>
+      <div><div class="stat-label">Zaman (Hafta)</div><div class="stat-val purple" id="time-display"></div></div>
       <div><div class="stat-label">Saygınlık</div><div class="stat-val gold" id="rep"></div></div>
-      <div><div class="stat-label">Korunma</div><div class="stat-val" id="protection-display"></div></div>
+      <div><div class="stat-label">Siyaset</div><div class="stat-val blue" id="politics-display">Yok</div></div>
     </div>
   </div>
 
-  <!-- AVM BÖLÜMÜ -->
+  <!-- HASTANE & SAĞLIK DURUMU -->
+  <div class="card" id="hospital-card" style="display:none; border-color: #f85149;">
+    <h2 style="color: #f85149;">🏥 Hastane & Tedavi Paneli</h2>
+    <div class="row" style="border:none;">
+      <div style="font-size:12px;" id="disease-info">Hastalık teşhis edildi!</div>
+      <button class="btn-sm btn-buy" style="background:#f85149;" onclick="cureDisease()">Tedavi Ol ($15,000)</button>
+    </div>
+  </div>
+
+  <!-- AVM & ESTETİK -->
   <div class="card" style="border-color: #d29922;">
-    <h2 style="color: #d29922;">🛍️ Şehir AVM & Lüks Yaşam</h2>
+    <h2 style="color: #d29922;">🛍️ Şehir AVM & Estetik Merkezi</h2>
     <div class="row" style="border:none; margin:0;">
-      <div style="font-size:11px; color:#8b949e; flex:1;">Kıyafet, araç, mücevher ve emlak satın alarak itibarını artır veya pasif gelir kazan.</div>
-      <button class="btn-action" style="background:#d29922; color:black; font-weight:bold; white-space:nowrap; margin-left:10px;" onclick="openShop(null)">AVM'ye Git</button>
+      <div style="font-size:11px; color:#8b949e; flex:1;">Ev, lüks araç, sigorta, bakım ve estetik operasyonlar.</div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn-action" style="background:#d29922; color:black; font-weight:bold;" onclick="openShop(null)">AVM</button>
+        <button class="btn-action" style="background:#ff79c6; color:black; font-weight:bold;" onclick="openPlasticSurgery()">Estetik 💉</button>
+      </div>
     </div>
-    <div id="inventory-list" class="scroll-box" style="max-height:80px; margin-top:8px;"></div>
+    <div id="inventory-list" class="scroll-box" style="max-height:70px; margin-top:8px;"></div>
   </div>
 
-  <div class="card">
-    <h2><span>Özel Hayat & İhtiyaçlar</span> <button class="btn-sm btn-dark" onclick="toggleProtection()">Korunmayı Değiştir</button></h2>
-    
-    <div class="row">
-      <div><strong>Tatile Çık (Dinlen)</strong> <div style="font-size:10px; color:#8b949e;">Stresi azalt (-$3,000)</div></div>
-      <button class="btn-sm btn-buy" onclick="takeVacation()">+30% ❤️ Al</button>
+  <!-- SİYASET & BELEDİYE -->
+  <div class="card" style="border-color: #1f6feb;">
+    <h2 style="color: #1f6feb;">🏛️ Siyasi Kariyer & Seçimler</h2>
+    <div class="row" style="border:none;">
+      <div style="font-size:11px; color:#8b949e;">Milletvekili veya Belediye Başkanı ol, yasaları lehine çevir.</div>
+      <button class="btn-action" style="background:#1f6feb;" onclick="openPoliticsModal()">Siyaset Paneli</button>
     </div>
-
-    <!-- SOSYAL MEDYA APP -->
-    <div class="row" style="border-bottom: none;">
-      <div><strong>📱 Flört App (Sosyal Medya)</strong> <div style="font-size:10px; color:#8b949e;">Tanış, buluş, lüks hediyeler al</div></div>
-      <button class="btn-action" style="background: #e1306c;" onclick="toggleFlirtApp()">Uygulamayı Aç</button>
-    </div>
-    <div id="flirt-app-container" class="flirt-box"></div>
-
-    <div id="family-status" style="font-size: 12px; margin: 12px 0 8px 0; color: #c9d1d9; border-top:1px solid #30363d; padding-top:8px;">Bekarsınız. Görücü Usulü Adaylar:</div>
-    <div id="partner-options" class="scroll-box" style="max-height:100px;"></div>
-    
-    <h2 style="margin-top: 10px; border:none;">Çocuklar</h2>
-    <div id="children-list" class="scroll-box" style="max-height:80px;"></div>
   </div>
 
+  <!-- BORSA -->
+  <div class="card" style="border-color: #58a6ff;">
+    <h2 style="color: #58a6ff;">📈 Borsa & Hisseler</h2>
+    <div id="stocks-container"></div>
+  </div>
+
+  <!-- TİCARET & ŞİRKETLER -->
   <div class="card">
-    <h2>Ticaret & Şirket Yönetimi</h2>
+    <h2>Ticaret & Holding Yönetimi</h2>
     <div class="row" style="border:none; margin-bottom:5px;">
       <select id="biz-select" style="margin:0; padding:6px; font-size:12px; width:70%;">
         <option value="0">Kahve Dükkanı ($10,000)</option>
         <option value="1">Süpermarket ($50,000)</option>
-        <option value="2">Lojistik Ağı ($250,000)</option>
+        <option value="2">Yazılım Şirketi ($150,000)</option>
+        <option value="3">Otomotiv Fabrikası ($500,000)</option>
+        <option value="4">Silah Ticareti ($1,200,000)</option>
+        <option value="5">Gayrimenkul Holdingi ($3,000,000)</option>
       </select>
       <button class="btn-action" onclick="openBusiness()">Kur</button>
     </div>
     <div id="businesses-container" class="scroll-box"></div>
   </div>
 
-  <div class="card" style="border-color: #8a2be2;">
-    <h2><span style="color: #bc8cff;">Karanlık İşler (⚠️ Stres Yapar)</span></h2>
+  <!-- ÇOCUKLAR & GENETİK -->
+  <div class="card">
+    <h2>👶 Aile & Çocuk Genetiği</h2>
+    <div id="children-list" class="scroll-box" style="max-height:120px;"></div>
+  </div>
+
+  <!-- ÖZEL HAYAT -->
+  <div class="card">
+    <h2><span>Özel Hayat & İhtiyaçlar</span> <button class="btn-sm btn-dark" onclick="toggleProtection()">Korunma: Açık</button></h2>
     <div class="row">
-      <div><strong>Şirket Hackle</strong> <div style="font-size:10px; color:#8b949e;">Risk: %25 | Ceza: 5 Yıl Hapis veya $15k</div></div>
-      <button class="btn-sm btn-sell" style="background:#8a2be2;" onclick="commitCrime('hack')">Hackle</button>
+      <div><strong>Tatile Çık (Dinlen)</strong> <div style="font-size:10px; color:#8b949e;">Stresi azalt (-$2,000)</div></div>
+      <button class="btn-sm btn-buy" onclick="takeVacation()">+20% ❤️ Al</button>
+    </div>
+    <div class="row" style="border-bottom: none;">
+      <div><strong>📱 Flört App (Sosyal Medya)</strong> <div style="font-size:10px; color:#8b949e;">Tanış, buluş, hediyeler gönder</div></div>
+      <button class="btn-action" style="background: #e1306c;" onclick="toggleFlirtApp()">Uygulamayı Aç</button>
+    </div>
+    <div id="flirt-app-container" class="flirt-box"></div>
+    <div id="family-status" style="font-size: 12px; margin: 12px 0 8px 0; color: #c9d1d9; border-top:1px solid #30363d; padding-top:8px;">Bekarsınız. Görücü Usulü Adaylar:</div>
+    <div id="partner-options" class="scroll-box" style="max-height:100px;"></div>
+  </div>
+
+  <!-- ÇETE SAVAŞLARI & KARANLIK İŞLER -->
+  <div class="card" style="border-color: #8a2be2;">
+    <h2><span style="color: #bc8cff;">Yeraltı, Çete Savaşları & Kartel ⚠️</span></h2>
+    <div class="row">
+      <div><strong>Mahalle Çetesi Kur / Genişlet</strong> <div style="font-size:10px; color:#8b949e;">Haftalık haraç toplar</div></div>
+      <button class="btn-sm btn-buy" style="background:#8a2be2;" onclick="upgradeGang()">Çeteyi Güçlendir ($20k)</button>
     </div>
     <div class="row">
-      <div><strong>Kaçakçılık Yap</strong> <div style="font-size:10px; color:#8b949e;">Risk: %45 | Ceza: 10 Yıl Hapis veya $60k</div></div>
-      <button class="btn-sm btn-sell" style="background:#8a2be2;" onclick="commitCrime('smuggle')">Operasyon</button>
+      <div><strong>Rakip Çete ile Savaş</strong> <div style="font-size:10px; color:#8b949e;">Bölge ele geçir ($50k gelir artışı)</div></div>
+      <button class="btn-sm btn-sell" style="background:#8a2be2;" onclick="fightGang()">Bölge Savaşı</button>
+    </div>
+    <div class="row">
+      <div><strong>🇨🇴 Kolombiya Kartel Ticareti</strong> <div style="font-size:10px; color:#8b949e;">Risk: %60 | Dev Kazanç: $350k</div></div>
+      <button class="btn-sm btn-sell" style="background:#ff4500; font-weight:bold;" onclick="commitCrime('colombia')">Sevkiyat</button>
     </div>
   </div>
 
   <div class="card">
-    <button class="action-btn" onclick="nextYear()">1 Yıl Yaşa (Oto-Kayıt) ⏳</button>
+    <button class="action-btn" onclick="nextWeek()">1 Hafta İlerle ⏳</button>
   </div>
 
   <div class="card">
@@ -158,10 +193,38 @@
   </div>
 </div>
 
+<!-- ÖLÜM EKRANI -->
 <div class="container" id="death-screen">
   <h1 style="color:#f85149;" id="death-reason">Vefat Ettin</h1>
   <p style="margin-bottom: 20px;">Mirası devralacak varisi seç:</p>
   <div id="heir-list"></div>
+</div>
+
+<!-- EVENT / RASTGELE OLAY MODALI -->
+<div id="event-modal" class="modal-overlay">
+  <div class="modal-content" style="height:auto; text-align:center; justify-content:center; gap:15px;">
+    <h2 id="event-title" style="color:#ff79c6; justify-content:center;">⚠️ KRİTİK YAŞAM OLAYI</h2>
+    <p id="event-desc" style="font-size:13px; color:#c9d1d9; line-height:1.5;"></p>
+    <div id="event-buttons" style="display:flex; flex-direction:column; gap:8px;"></div>
+  </div>
+</div>
+
+<!-- SİYASET MODALI -->
+<div id="politics-modal" class="modal-overlay">
+  <div class="modal-content">
+    <h2 style="color:#1f6feb;">🏛️ Siyasi Kürsü <button class="btn-sm btn-sell" onclick="closePoliticsModal()">Kapat</button></h2>
+    <div style="font-size:12px; color:#8b949e; margin-bottom:12px;">Mevcut Makamın: <span class="blue" id="current-office">Sivil</span></div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div class="row" style="background:#0d1117; padding:8px; border-radius:6px;">
+        <div><strong>Milletvekili Adaylığı</strong><div style="font-size:10px; color:#8b949e;">Maliyet: $100,000 | Şans: %50</div></div>
+        <button class="btn-sm btn-buy" onclick="runForOffice('Milletvekili', 100000, 0.5)">Seçime Gir</button>
+      </div>
+      <div class="row" style="background:#0d1117; padding:8px; border-radius:6px;">
+        <div><strong>Belediye Başkanı Adaylığı</strong><div style="font-size:10px; color:#8b949e;">Maliyet: $1,000,000 | Şans: %30</div></div>
+        <button class="btn-sm btn-buy" onclick="runForOffice('Belediye Başkanı', 1000000, 0.3)">Seçime Gir</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- AVM MODALI -->
@@ -174,121 +237,43 @@
   </div>
 </div>
 
-<script>
-  // Güvenli ve Hatasız 100+ Ürün Veritabanı
-  const shopDb = [
-    {id:1, icon:"🌹", name:"Kırmızı Gül", cost:50, cat:"Çiçek"},
-    {id:2, icon:"🌻", name:"Ayçiçeği", cost:40, cat:"Çiçek"},
-    {id:3, icon:"🌸", name:"Orkide", cost:150, cat:"Çiçek"},
-    {id:4, icon:"🌷", name:"Lale", cost:60, cat:"Çiçek"},
-    {id:5, icon:"🌺", name:"Zambak", cost:70, cat:"Çiçek"},
-    {id:6, icon:"🌼", name:"Kır Çiçeği", cost:30, cat:"Çiçek"},
-    {id:7, icon:"🌵", name:"Kaktüs", cost:25, cat:"Çiçek"},
-    {id:8, icon:"🪴", name:"Bonsai", cost:200, cat:"Çiçek"},
-    {id:9, icon:"🏵️", name:"Karanfil", cost:40, cat:"Çiçek"},
-    {id:10, icon:"🪷", name:"Lilyum", cost:90, cat:"Çiçek"},
-    {id:11, icon:"👕", name:"Tişört", cost:100, cat:"Giyim"},
-    {id:12, icon:"👔", name:"Gömlek", cost:250, cat:"Giyim"},
-    {id:13, icon:"🧶", name:"Kazak", cost:300, cat:"Giyim"},
-    {id:14, icon:"👖", name:"Kot Pantolon", cost:400, cat:"Giyim"},
-    {id:15, icon:"🩳", name:"Şort", cost:150, cat:"Giyim"},
-    {id:16, icon:"👗", name:"Yazlık Elbise", cost:500, cat:"Giyim"},
-    {id:17, icon:"👘", name:"Abiye", cost:2000, cat:"Giyim"},
-    {id:18, icon:"🧥", name:"Ceket", cost:1200, cat:"Giyim"},
-    {id:19, icon:"🧥", name:"Kışlık Mont", cost:1500, cat:"Giyim"},
-    {id:20, icon:"🧢", name:"Şapka", cost:80, cat:"Giyim"},
-    {id:21, icon:"🧣", name:"Kaşkol", cost:100, cat:"Giyim"},
-    {id:22, icon:"🧤", name:"Eldiven", cost:120, cat:"Giyim"},
-    {id:23, icon:"🧦", name:"Çorap", cost:20, cat:"Giyim"},
-    {id:24, icon:"👟", name:"Spor Ayakkabı", cost:800, cat:"Giyim"},
-    {id:25, icon:"👠", name:"Topuklu Ayakkabı", cost:1500, cat:"Giyim"},
-    {id:26, icon:"🥾", name:"Bot", cost:1200, cat:"Giyim"},
-    {id:27, icon:"👡", name:"Terlik", cost:150, cat:"Giyim"},
-    {id:28, icon:"🎒", name:"Sırt Çantası", cost:400, cat:"Giyim"},
-    {id:29, icon:"👜", name:"Deri Çanta", cost:3000, cat:"Giyim"},
-    {id:30, icon:"🕶️", name:"Güneş Gözlüğü", cost:800, cat:"Giyim"},
-    {id:31, icon:"👙", name:"Dantelli Sütyen", cost:300, cat:"İç Çamaşırı"},
-    {id:32, icon:"🩱", name:"İpek Gecelik", cost:800, cat:"İç Çamaşırı"},
-    {id:33, icon:"🩲", name:"Kırmızı Külot", cost:150, cat:"İç Çamaşırı"},
-    {id:34, icon:"👘", name:"Saten Sabahlık", cost:1000, cat:"İç Çamaşırı"},
-    {id:35, icon:"🎀", name:"Jartiyer Takımı", cost:1200, cat:"İç Çamaşırı"},
-    {id:36, icon:"🩲", name:"Spor İç Çamaşırı", cost:250, cat:"İç Çamaşırı"},
-    {id:37, icon:"👙", name:"Pamuklu Takım", cost:200, cat:"İç Çamaşırı"},
-    {id:38, icon:"👙", name:"Dantelli Bralet", cost:400, cat:"İç Çamaşırı"},
-    {id:39, icon:"👗", name:"Korseli Takım", cost:600, cat:"İç Çamaşırı"},
-    {id:40, icon:"👚", name:"Pijama Takımı", cost:350, cat:"İç Çamaşırı"},
-    {id:41, icon:"💍", name:"Gümüş Yüzük", cost:500, cat:"Ziynet"},
-    {id:42, icon:"💍", name:"Altın Yüzük", cost:2000, cat:"Ziynet"},
-    {id:43, icon:"💎", name:"Tektaş Pırlanta", cost:15000, cat:"Ziynet"},
-    {id:44, icon:"📿", name:"Gümüş Kolye", cost:800, cat:"Ziynet"},
-    {id:45, icon:"🦪", name:"İnci Kolye", cost:3000, cat:"Ziynet"},
-    {id:46, icon:"⛓️", name:"Altın Zincir", cost:5000, cat:"Ziynet"},
-    {id:47, icon:"❇️", name:"Zümrüt Kolye", cost:20000, cat:"Ziynet"},
-    {id:48, icon:"💎", name:"Yakut Küpe", cost:12000, cat:"Ziynet"},
-    {id:49, icon:"💎", name:"Pırlanta Küpe", cost:18000, cat:"Ziynet"},
-    {id:50, icon:"💫", name:"Altın Bilezik", cost:4000, cat:"Ziynet"},
-    {id:51, icon:"🔗", name:"Gümüş Bileklik", cost:600, cat:"Ziynet"},
-    {id:52, icon:"⌚", name:"Platin Saat", cost:25000, cat:"Ziynet"},
-    {id:53, icon:"⌚", name:"Altın Saat", cost:15000, cat:"Ziynet"},
-    {id:54, icon:"🏵️", name:"Yakut Broş", cost:8000, cat:"Ziynet"},
-    {id:55, icon:"💫", name:"Altın Halhal", cost:1500, cat:"Ziynet"},
-    {id:56, icon:"📱", name:"Akıllı Telefon", cost:3000, cat:"Elektronik"},
-    {id:57, icon:"💊", name:"Tablet", cost:2000, cat:"Elektronik"},
-    {id:58, icon:"💻", name:"Dizüstü Bilgisayar", cost:5000, cat:"Elektronik"},
-    {id:59, icon:"⌚", name:"Akıllı Saat", cost:1000, cat:"Elektronik"},
-    {id:60, icon:"🎧", name:"Kulaklık", cost:500, cat:"Elektronik"},
-    {id:61, icon:"🎮", name:"Oyun Konsolu", cost:2500, cat:"Elektronik"},
-    {id:62, icon:"📺", name:"Televizyon", cost:4000, cat:"Elektronik"},
-    {id:63, icon:"📷", name:"Kamera", cost:6000, cat:"Elektronik"},
-    {id:64, icon:"🚁", name:"Drone", cost:3500, cat:"Elektronik"},
-    {id:65, icon:"🕶️", name:"VR Gözlük", cost:2000, cat:"Elektronik"},
-    {id:66, icon:"🧴", name:"Lüks Parfüm", cost:1200, cat:"Elektronik"},
-    {id:67, icon:"🍫", name:"Lüks Çikolata", cost:150, cat:"Elektronik"},
-    {id:68, icon:"🍷", name:"Yıllanmış Şarap", cost:800, cat:"Elektronik"},
-    {id:69, icon:"🍾", name:"Şampanya", cost:1500, cat:"Elektronik"},
-    {id:70, icon:"🍱", name:"Siyah Havyar", cost:2500, cat:"Elektronik"},
-    {id:71, icon:"🚲", name:"Bisiklet", cost:500, cat:"Araç"},
-    {id:72, icon:"🛴", name:"E-Scooter", cost:800, cat:"Araç"},
-    {id:73, icon:"🏍️", name:"Motosiklet", cost:8000, cat:"Araç"},
-    {id:74, icon:"🛵", name:"Vespa", cost:4000, cat:"Araç"},
-    {id:75, icon:"🚙", name:"Şehir Arabası", cost:30000, cat:"Araç"},
-    {id:76, icon:"🚗", name:"Sedan", cost:50000, cat:"Araç"},
-    {id:77, icon:"🚙", name:"Lüks SUV", cost:90000, cat:"Araç"},
-    {id:78, icon:"🏎️", name:"Spor Araba", cost:250000, cat:"Araç"},
-    {id:79, icon:"🚘", name:"Limuzin", cost:400000, cat:"Araç"},
-    {id:80, icon:"🚕", name:"Klasik Araba", cost:150000, cat:"Araç"},
-    {id:81, icon:"🚐", name:"Karavan", cost:80000, cat:"Araç"},
-    {id:82, icon:"🚤", name:"Sürat Teknesi", cost:300000, cat:"Araç"},
-    {id:83, icon:"🛥️", name:"Lüks Yat", cost:1500000, cat:"Araç"},
-    {id:84, icon:"🚁", name:"Helikopter", cost:2500000, cat:"Araç"},
-    {id:85, icon:"✈️", name:"Özel Jet", cost:8000000, cat:"Araç"},
-    {id:86, icon:"⛺", name:"Lüks Çadır", cost:2000, cat:"Emlak"},
-    {id:87, icon:"🛖", name:"Ahşap Kulübe", cost:15000, cat:"Emlak"},
-    {id:88, icon:"🏢", name:"Stüdyo Daire", cost:80000, cat:"Emlak"},
-    {id:89, icon:"🏠", name:"1+1 Ev", cost:120000, cat:"Emlak"},
-    {id:90, icon:"🏡", name:"3+1 Daire", cost:250000, cat:"Emlak"},
-    {id:91, icon:"🏘️", name:"Dubleks Ev", cost:400000, cat:"Emlak"},
-    {id:92, icon:"🏙️", name:"Penthouse", cost:800000, cat:"Emlak"},
-    {id:93, icon:"🏊", name:"Havuzlu Villa", cost:1200000, cat:"Emlak"},
-    {id:94, icon:"🏖️", name:"Sahil Evi", cost:1500000, cat:"Emlak"},
-    {id:95, icon:"⛰️", name:"Dağ Evi", cost:900000, cat:"Emlak"},
-    {id:96, icon:"🚜", name:"Çiftlik Evi", cost:2000000, cat:"Emlak"},
-    {id:97, icon:"🏛️", name:"Malikane", cost:5000000, cat:"Emlak"},
-    {id:98, icon:"🏰", name:"Şato", cost:12000000, cat:"Emlak"},
-    {id:99, icon:"🏝️", name:"Özel Ada", cost:25000000, cat:"Emlak"},
-    {id:100, icon:"🏢", name:"Gökdelen Katı", cost:8000000, cat:"Emlak"}
-  ];
+<!-- ESTETİK KLİNİK MODALI -->
+<div id="surgery-modal" class="modal-overlay">
+  <div class="modal-content">
+    <h2 style="color:#ff79c6;">Plastik Cerrahi Merkezi 💉 <button class="btn-sm btn-sell" onclick="closeSurgery()">Kapat</button></h2>
+    <div style="font-size:11px; color:#8b949e; margin-bottom:8px;">Mevcut Karizma: <span class="pink" id="surgery-beauty">0%</span></div>
+    <div style="flex-grow:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;" id="surgery-list"></div>
+  </div>
+</div>
 
+<script>
+  const shopDb = [
+    {id:1, icon:"🌹", name:"Kırmızı Gül", cost:50, cat:"Çiçek"}, {id:2, icon:"🌻", name:"Ayçiçeği", cost:40, cat:"Çiçek"}, {id:3, icon:"🌸", name:"Orkide", cost:150, cat:"Çiçek"},
+    {id:11, icon:"👕", name:"Tişört", cost:100, cat:"Giyim"}, {id:12, icon:"👔", name:"Gömlek", cost:250, cat:"Giyim"}, {id:17, icon:"👘", name:"Abiye", cost:2000, cat:"Giyim"}, {id:29, icon:"👜", name:"Deri Çanta", cost:3000, cat:"Giyim"},
+    {id:31, icon:"👙", name:"Dantelli Sütyen", cost:300, cat:"İç Çamaşırı"}, {id:32, icon:"🩱", name:"İpek Gecelik", cost:800, cat:"İç Çamaşırı"}, {id:35, icon:"🎀", name:"Jartiyer Takımı", cost:1200, cat:"İç Çamaşırı"},
+    {id:41, icon:"💍", name:"Gümüş Yüzük", cost:500, cat:"Ziynet"}, {id:43, icon:"💎", name:"Tektaş Pırlanta", cost:15000, cat:"Ziynet"}, {id:52, icon:"⌚", name:"Platin Saat", cost:25000, cat:"Ziynet"},
+    {id:56, icon:"📱", name:"Akıllı Telefon", cost:3000, cat:"Elektronik"}, {id:58, icon:"💻", name:"Dizüstü Bilgisayar", cost:5000, cat:"Elektronik"}, {id:69, icon:"🍾", name:"Şampanya", cost:1500, cat:"Elektronik"},
+    {id:73, icon:"🏍️", name:"Motosiklet", cost:8000, cat:"Araç"}, {id:76, icon:"🚗", name:"Sedan", cost:50000, cat:"Araç"}, {id:78, icon:"🏎️", name:"Spor Araba", cost:250000, cat:"Araç"}, {id:85, icon:"✈️", name:"Özel Jet", cost:8000000, cat:"Araç"},
+    {id:88, icon:"🏢", name:"Stüdyo Daire", cost:80000, cat:"Emlak"}, {id:93, icon:"🏊", name:"Havuzlu Villa", cost:1200000, cat:"Emlak"}, {id:97, icon:"🏛️", name:"Malikane", cost:5000000, cat:"Emlak"}, {id:99, icon:"🏝️", name:"Özel Ada", cost:25000000, cat:"Emlak"}
+  ];
   const allCategories = [...new Set(shopDb.map(i => i.cat))];
+
+  const surgeries = [
+    {id:1, name:"Botoks Enjeksiyonu", cost:2500, boost:5, risk:5},
+    {id:2, name:"Burun Estetiği (Rinoplasti)", cost:12000, boost:15, risk:15},
+    {id:3, name:"Hollywood Yanak & Dolgu", cost:25000, boost:25, risk:20},
+    {id:4, name:"Liposuction (Yağ Aldırma)", cost:40000, boost:35, risk:25},
+    {id:5, name:"Gençleştirme & Yüz Germe", cost:80000, boost:50, risk:30}
+  ];
 
   function generateFlirts(playerGender) {
     let names = [], jobs = [];
     if(playerGender === 'E') {
-      names = ["Aylin", "Buse", "Ceren", "Deniz", "Ece", "Funda", "Gizem", "Hande", "Irmak", "Jale", "Kübra", "Lara", "Melis", "Nur", "Oya", "Pelin", "Rüya", "Selin", "Tuğçe", "Umay"];
-      jobs = ["Üniversiteli", "Model", "Hemşire", "Oyuncu", "Güzellik Uzm.", "Yazılımcı", "Influencer", "DJ", "Spor Eğitm.", "Mimar", "Hostes", "Ressam", "Tasarımcı", "Avukat", "Öğretmen", "Stilist", "Şef", "Yoga Eğitm.", "Müzisyen", "Barmen"];
+      names = ["Aylin", "Buse", "Ceren", "Deniz", "Ece", "Funda", "Gizem", "Hande", "Irmak", "Jale"];
+      jobs = ["Üniversiteli", "Model", "Hemşire", "Oyuncu", "Güzellik Uzm.", "Yazılımcı", "Influencer", "DJ", "Spor Eğitm.", "Mimar"];
     } else {
-      names = ["Ahmet", "Burak", "Cem", "Doruk", "Emre", "Furkan", "Görkem", "Hakan", "İlker", "Kaan", "Levent", "Murat", "Ozan", "Polat", "Rüzgar", "Sinan", "Tarık", "Umut", "Volkan", "Yiğit"];
-      jobs = ["Üniversiteli", "Model", "Doktor", "Oyuncu", "Fitness Eğitm.", "Yazılımcı", "CEO", "DJ", "Mühendis", "Mimar", "Pilot", "Ressam", "Tasarımcı", "Avukat", "Öğretmen", "Barmen", "Şef", "Sporcu", "Müzisyen", "Güvenlik"];
+      names = ["Ahmet", "Burak", "Cem", "Doruk", "Emre", "Furkan", "Görkem", "Hakan", "İlker", "Kaan"];
+      jobs = ["Üniversiteli", "Model", "Doktor", "Oyuncu", "Fitness Eğitm.", "Yazılımcı", "CEO", "DJ", "Mühendis", "Mimar"];
     }
     return names.map((n, i) => ({ name: n, job: jobs[i], avatar: `https://api.dicebear.com/9.x/pixel-art/svg?seed=${n}`, level: 0 }));
   }
@@ -296,30 +281,37 @@
   function generatePartners(playerGender) {
     if(playerGender === 'E') {
       return [
-        { type: 'Manken', cost: 8000, repBoost: 60, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Isabella' },
-        { type: 'Sosyetik', cost: 5000, repBoost: 40, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Jasmine' },
-        { type: 'Doktor', cost: 2000, repBoost: 20, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Mia' },
-        { type: 'Suç Ortağı', cost: 0, repBoost: -10, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Chloe' }
+        { type: 'Manken', cost: 200, repBoost: 60, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Isabella' },
+        { type: 'Sosyetik', cost: 150, repBoost: 40, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Jasmine' },
+        { type: 'Doktor', cost: 50, repBoost: 20, income: 3000, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Mia' }
       ];
     } else {
       return [
-        { type: 'Aktör', cost: 8000, repBoost: 60, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Liam' },
-        { type: 'Zengin İş Adamı', cost: 5000, repBoost: 40, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Oliver' },
-        { type: 'Cerrah', cost: 2000, repBoost: 20, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Noah' },
-        { type: 'Mafya Babası', cost: 0, repBoost: -10, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Elijah' }
+        { type: 'Aktör', cost: 200, repBoost: 60, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Liam' },
+        { type: 'Zengin İş Adamı', cost: 150, repBoost: 40, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Oliver' },
+        { type: 'Cerrah', cost: 50, repBoost: 20, income: 3000, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Noah' }
       ];
     }
   }
 
   let defaultState = {
-    charName: "", gender: "E", generation: 1, age: 18, cash: 5000, reputation: 0, passiveIncome: 0, health: 100,
+    charName: "", gender: "E", age: 18, week: 1, cash: 5000, reputation: 0, passiveIncome: 0, health: 100, beauty: 50,
+    office: "Sivil", gangPower: 0, gangIncome: 0, disease: null,
     avatarUrl: "https://i.ibb.co/6byg5Lw/avatar-giri-imci.png",
     protection: true, spouse: null, children: [], inventory: [],
     flirts: [], partners: [],
+    stocks: [
+      { id: 'tech', name: 'NanoTech', price: 120, owned: 0, vol: 0.15 },
+      { id: 'crypto', name: 'BitCoin TR', price: 500, owned: 0, vol: 0.35 },
+      { id: 'energy', name: 'SolarEnerji', price: 80, owned: 0, vol: 0.10 }
+    ],
     bizTypes: [
-      { name: 'Kahve Dükkanı', cost: 10000, baseInc: 3000, empCost: 1500, empBoost: 4000 },
-      { name: 'Süpermarket', cost: 50000, baseInc: 12000, empCost: 4000, empBoost: 9000 },
-      { name: 'Lojistik Ağı', cost: 250000, baseInc: 50000, empCost: 12000, empBoost: 25000 }
+      { name: 'Kahve Dükkanı', cost: 10000, baseInc: 800, empCost: 400, empBoost: 1000 },
+      { name: 'Süpermarket', cost: 50000, baseInc: 3000, empCost: 1000, empBoost: 2500 },
+      { name: 'Yazılım Şirketi', cost: 150000, baseInc: 10000, empCost: 3000, empBoost: 8000 },
+      { name: 'Otomotiv Fabrikası', cost: 500000, baseInc: 35000, empCost: 10000, empBoost: 25000 },
+      { name: 'Silah Ticareti', cost: 1200000, baseInc: 90000, empCost: 25000, empBoost: 60000 },
+      { name: 'Gayrimenkul Holdingi', cost: 3000000, baseInc: 250000, empCost: 60000, empBoost: 150000 }
     ],
     businesses: []
   };
@@ -327,20 +319,23 @@
   let state = JSON.parse(JSON.stringify(defaultState));
   const flirtStatus = ["Eşleşme", "Takılmaca", "Sevgili", "Nişanlı"];
   let currentShopTarget = null;
-  let currentShopCat = "Giyim";
+  let currentShopCat = "Çiçek";
 
   function log(msg) {
     const box = document.getElementById('log');
-    box.innerHTML = `<div>> Yıl ${state.age}: ${msg}</div>` + box.innerHTML;
+    box.innerHTML = `<div>> Yıl ${Math.floor(state.week/52)+1} (Hafta ${state.week}): ${msg}</div>` + box.innerHTML;
   }
 
-  function saveGame() { localStorage.setItem('dynastySave9', JSON.stringify(state)); }
-  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave9'); location.reload(); } }
+  function saveGame() { localStorage.setItem('dynastySave14', JSON.stringify(state)); }
+  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave14'); location.reload(); } }
 
   window.onload = function() {
-    let savedData = localStorage.getItem('dynastySave9');
+    let savedData = localStorage.getItem('dynastySave14');
     if (savedData) {
       state = JSON.parse(savedData);
+      if(!state.office) state.office = "Sivil";
+      if(state.gangPower === undefined) { state.gangPower = 0; state.gangIncome = 0; }
+      if(state.disease === undefined) state.disease = null;
       document.getElementById('start-screen').style.display = 'none';
       document.getElementById('main-ui').style.display = 'flex';
       render();
@@ -357,7 +352,7 @@
 
     document.getElementById('start-screen').style.display = 'none';
     document.getElementById('main-ui').style.display = 'flex';
-    log(`Hikaye başladı. Adın: ${state.charName} (${state.gender}), cebinde $5,000 var.`);
+    log(`Hayat başladı. Adın: ${state.charName}, cebinde $5,000 var.`);
     render(); saveGame();
   }
 
@@ -369,37 +364,27 @@
   function openShop(targetIdx) {
     currentShopTarget = targetIdx;
     document.getElementById('shop-modal').style.display = 'flex';
-    if (targetIdx === null) {
-      document.getElementById('shop-title').innerHTML = `AVM & Emlak Borsası <button class="btn-sm btn-sell" onclick="closeShop()">Kapat</button>`;
-    } else {
-      let fName = state.flirts[targetIdx].name;
-      document.getElementById('shop-title').innerHTML = `Hediye Seç: ${fName} <button class="btn-sm btn-sell" onclick="closeShop()">Kapat</button>`;
-    }
+    document.getElementById('shop-title').innerHTML = targetIdx === null ? `AVM & Emlak <button class="btn-sm btn-sell" onclick="closeShop()">Kapat</button>` : `Hediye Seç <button class="btn-sm btn-sell" onclick="closeShop()">Kapat</button>`;
     renderShop();
   }
-
   function closeShop() { document.getElementById('shop-modal').style.display = 'none'; }
   function setShopCat(cat) { currentShopCat = cat; renderShop(); }
 
   function renderShop() {
     document.getElementById('shop-cash').innerText = `$${Math.floor(state.cash).toLocaleString()}`;
     let catsHtml = '';
-    allCategories.forEach(c => {
-      catsHtml += `<button class="cat-btn ${currentShopCat===c ? 'active':''}" onclick="setShopCat('${c}')">${c}</button>`;
-    });
+    allCategories.forEach(c => { catsHtml += `<button class="cat-btn ${currentShopCat===c ? 'active':''}" onclick="setShopCat('${c}')">${c}</button>`; });
     document.getElementById('shop-categories').innerHTML = catsHtml;
 
     let itemsHtml = '';
-    let filtered = shopDb.filter(i => i.cat === currentShopCat);
-    filtered.forEach(item => {
+    shopDb.filter(i => i.cat === currentShopCat).forEach(item => {
       itemsHtml += `
         <div class="shop-item">
           <div style="font-size:32px;">${item.icon}</div>
           <strong style="font-size:12px; color:#c9d1d9;">${item.name}</strong>
           <div class="gold" style="font-size:11px; margin-bottom:5px;">$${item.cost.toLocaleString()}</div>
           <button class="btn-sm btn-action" onclick="buyItem(${item.id})">Satın Al</button>
-        </div>
-      `;
+        </div>`;
     });
     document.getElementById('shop-items').innerHTML = itemsHtml;
   }
@@ -412,49 +397,208 @@
     if (currentShopTarget === null) {
       state.inventory.push(item);
       if(item.cat === 'Emlak') {
-        let kira = item.cost * 0.05;
-        state.passiveIncome += kira;
+        let haftalikKira = (item.cost * 0.08) / 52;
+        state.passiveIncome += haftalikKira;
         state.reputation += Math.floor(item.cost / 20000);
-        log(`Kendine ${item.icon} ${item.name} satın aldın! (+Pasif Gelir: $${Math.floor(kira)})`);
+        log(`Kendine ${item.icon} ${item.name} aldın! (+Kira Geliri ve Konfor Sağlandı)`);
+      } else if(item.cat === 'Araç') {
+        log(`Kendine lüks ${item.icon} ${item.name} aldın! Bakım ve sigortası başlatıldı.`);
       } else {
         state.reputation += Math.floor(item.cost / 10000);
-        state.health = Math.min(100, state.health + 2);
-        log(`Kendine ${item.icon} ${item.name} satın aldın!`);
+        state.beauty = Math.min(100, state.beauty + 1);
+        log(`Kendine ${item.icon} ${item.name} aldın! Karizma arttı.`);
       }
     } else {
       let f = state.flirts[currentShopTarget];
-      log(`${f.name}'ye ${item.icon} ${item.name} hediye ettin! (-$${item.cost.toLocaleString()})`);
-      if (f.level === 0 && item.cost >= 300) { f.level = 1; log(`${f.name} ile takılıyorsunuz!`); } 
-      else if (f.level === 1 && item.cost >= 2000) { f.level = 2; log(`${f.name} ile Sevgilisiniz!`); } 
-      else if (f.level === 2 && item.cost >= 15000) { f.level = 3; log(`${f.name} ile Nişanlısınız!`); }
+      log(`${f.name}'ye ${item.icon} ${item.name} hediye ettin!`);
+      if (f.level === 0 && item.cost >= 100) { f.level = 1; log(`${f.name} ile takılıyorsunuz!`); } 
+      else if (f.level === 1 && item.cost >= 1000) { f.level = 2; log(`${f.name} ile Sevgilisiniz!`); } 
+      else if (f.level === 2 && item.cost >= 10000) { f.level = 3; log(`${f.name} ile Nişanlısınız!`); }
     }
-    renderShop();
+    renderShop(); render();
+  }
+
+  function openPlasticSurgery() {
+    document.getElementById('surgery-modal').style.display = 'flex';
+    document.getElementById('surgery-beauty').innerText = `${state.beauty}%`;
+    let html = '';
+    surgeries.forEach(s => {
+      html += `
+        <div class="row" style="background:#0d1117; padding:8px; border-radius:6px; margin-bottom:4px;">
+          <div>
+            <strong>${s.name}</strong>
+            <div style="font-size:10px; color:#8b949e;">Maliyet: $${s.cost.toLocaleString()} | +%${s.boost} Karizma</div>
+          </div>
+          <button class="btn-sm btn-buy" style="background:#ff79c6; color:black;" onclick="doSurgery(${s.id})">Ameliyat Ol</button>
+        </div>`;
+    });
+    document.getElementById('surgery-list').innerHTML = html;
+  }
+  function closeSurgery() { document.getElementById('surgery-modal').style.display = 'none'; }
+
+  function doSurgery(id) {
+    let s = surgeries.find(x => x.id === id);
+    if(state.cash < s.cost) { alert("Yeterli paran yok!"); return; }
+    state.cash -= s.cost;
+    
+    if(Math.random() * 100 < s.risk) {
+      state.health -= 25;
+      log(`ESTETİK HATASI! ${s.name} operasyonu ters gitti (-25% ❤️).`);
+    } else {
+      state.beauty = Math.min(100, state.beauty + s.boost);
+      state.reputation += Math.floor(s.boost / 2);
+      log(`Estetik başarılı! ${s.name} sonrası karizman fırladı (%${state.beauty}).`);
+    }
+    closeSurgery(); render();
+  }
+
+  function openPoliticsModal() {
+    document.getElementById('politics-modal').style.display = 'flex';
+    document.getElementById('current-office').innerText = state.office;
+  }
+  function closePoliticsModal() { document.getElementById('politics-modal').style.display = 'none'; }
+
+  function runForOffice(title, cost, successChance) {
+    if(state.cash < cost) { alert("Seçim kampanyası için yeterli bütçen yok!"); return; }
+    state.cash -= cost;
+    if(Math.random() < successChance) {
+      state.office = title;
+      state.reputation += 50;
+      log(`SEÇİMİ KAZANDIN! Artık yeni unvanın: ${title} 🏛️ (+50⭐)`);
+      closePoliticsModal();
+    } else {
+      log(`Seçim kampanyası başarısız oldu, halk seni seçmedi. Masraflar yandı.`);
+    }
     render();
   }
 
+  function upgradeGang() {
+    let cost = 20000;
+    if(state.cash < cost) { alert("Yeterli paran yok!"); return; }
+    state.cash -= cost;
+    state.gangPower += 15;
+    state.gangIncome += 3500;
+    log(`Mahalle çeteni güçlendirdin! Güç: ${state.gangPower}, Haraç: +$3,500/hafta`);
+    render();
+  }
+
+  function fightGang() {
+    if(state.gangPower < 20) { alert("Çeten henüz çok zayıf!"); return; }
+    if(state.cash < 10000) { alert("Savaş için en az $10,000 lazım!"); return; }
+    state.cash -= 10000;
+    if(Math.random() < 0.6) {
+      state.gangPower += 25;
+      state.gangIncome += 10000;
+      log("Bölge savaşı zaferle sonuçlandı! Yeni mahalleler bağlandı (+$10k/hafta).");
+    } else {
+      state.gangPower = Math.max(0, state.gangPower - 10);
+      state.health -= 15;
+      log("Bölge savaşında çatışma ağır geçti, yaralandın (-15% ❤️).");
+    }
+    render();
+  }
+
+  function educateChild(idx, type) {
+    let cost = type === 'uni' ? 25000 : 10000;
+    if(state.cash < cost) { alert("Eğitim masrafı için paran yetersiz!"); return; }
+    state.cash -= cost;
+    let c = state.children[idx];
+    c.educated = type;
+    log(`${c.name} isimli çocuğun ${type === 'uni' ? 'Üniversiteye' : 'Özel Eğitime'} gönderildi.`);
+    render();
+  }
+
+  function assignChildToBiz(childIdx, bizIdx) {
+    let c = state.children[childIdx];
+    let b = state.businesses[bizIdx];
+    let t = state.bizTypes[b.typeIdx];
+    c.workingBiz = t.name;
+    let zekaKatkisi = 1 + (c.intelligence / 50);
+    b.empBoost += Math.floor(5000 * zekaKatkisi);
+    log(`${c.name} (Zeka: ${c.intelligence}), ${t.name} başına CEO oldu! Şirket kârı uçtu.`);
+    render();
+  }
+
+  function triggerRandomEvent() {
+    let events = [
+      {
+        title: "Vergi Denetimi Şoku!",
+        desc: "Maliye bakanlığı hesaplarında anormal hareketlilik sezdi ve seni incelemeye aldı.",
+        options: [
+          { text: "Rüşvet ver kurtul ($50,000)", action: () => { if(state.cash>=50000){state.cash-=50000; log("Maliye memurlarına $50k verip incelemeyi kapattın.");} else {state.cash-=state.cash; log("Paran yetmeyince şirketlerine el koydular!");} } },
+          { text: "Denetime diren (Mahkemelik ol)", action: () => { if(Math.random()<0.5){log("Mahkemeyi kazandın, tertemiz yırttın!");} else {state.cash-=100000; log("Mahkemeyi kaybettin, $100k ceza ödedin!");} } }
+        ]
+      },
+      {
+        title: "Şirkette Büyük Grev!",
+        desc: "Çalışanların maaş zammı talebiyle iş bıraktı.",
+        options: [
+          { text: "İstediklerini ver (Maliyetli)", action: () => { state.cash -= 20000; log("Çalışanların zam talebini kabul ettin (-$20,000)."); } },
+          { text: "Polis çağır / Dağıt", action: () => { state.reputation -= 10; log("Grev zorla bastırıldı, itibarın zedelendi (-10⭐)."); } }
+        ]
+      }
+    ];
+
+    let ev = events[Math.floor(Math.random() * events.length)];
+    document.getElementById('event-title').innerText = ev.title;
+    document.getElementById('event-desc').innerText = ev.desc;
+    
+    let btnHtml = '';
+    ev.options.forEach((opt, oIdx) => {
+      btnHtml += `<button class="action-btn" style="background:#238636; color:white;" onclick="resolveEvent(${oIdx})">${opt.text}</button>`;
+    });
+    document.getElementById('event-buttons').innerHTML = btnHtml;
+    document.getElementById('event-modal').style.display = 'flex';
+    window.currentEventOptions = ev.options;
+  }
+
+  function resolveEvent(optIdx) {
+    window.currentEventOptions[optIdx].action();
+    document.getElementById('event-modal').style.display = 'none';
+    render();
+  }
+
+  function cureDisease() {
+    let cost = 15000;
+    if(state.cash < cost) { alert("Tedavi için $15,000 lazım!"); return; }
+    state.cash -= cost;
+    log(`Hastanede başarılı bir tedavi süreci geçirdin. ${state.disease} tamamen iyileşti! 💉`);
+    state.disease = null;
+    render();
+  }
+
+  function buyStock(id) {
+    let s = state.stocks.find(x => x.id === id);
+    if(state.cash >= s.price) { state.cash -= s.price; s.owned++; render(); }
+  }
+  function sellStock(id) {
+    let s = state.stocks.find(x => x.id === id);
+    if(s.owned > 0) { state.cash += s.price; s.owned--; render(); }
+  }
+
   function dateFlirt(idx) {
-    if(state.cash < 300) { log("Buluşmak için $300 lazım!"); return; }
-    state.cash -= 300;
+    if(state.cash < 100) { log("Buluşma için $100 lazım!"); return; }
+    state.cash -= 100;
     let f = state.flirts[idx];
-    log(`${f.name} ile mekanda buluştun (-$300).`);
-    if(f.level === 0 && Math.random() < 0.6) { f.level = 1; log(`${f.name} ile takılıyorsunuz!`); }
-    if(!state.protection && Math.random() < 0.35) { haveChild(true, f.name); }
+    log(`${f.name} ile buluştun (-$100).`);
+    let successChance = 0.5 + (state.beauty / 200);
+    if(f.level === 0 && Math.random() < successChance) { f.level = 1; log(`${f.name} ile takılıyorsunuz!`); }
+    if(!state.protection && Math.random() < 0.25) { haveChild(true, f.name); }
     render();
   }
 
   function marryFlirt(idx) {
     let f = state.flirts[idx];
-    state.spouse = { type: f.name, cost: 3000, repBoost: 15, income: 0, avatar: f.avatar };
+    state.spouse = { type: f.name, cost: 500, repBoost: 15, income: 0, avatar: f.avatar };
     state.reputation += 15;
-    log(`${f.name} ile evlendin! (+15⭐)`);
+    log(`${f.name} ile evlendin!`);
     state.flirts.splice(idx, 1); 
     render();
   }
 
   function takeVacation() {
-    if(state.cash >= 3000) { state.cash -= 3000; state.health = Math.min(100, state.health + 30); log("Tatil yapıldı (+30% ❤️)."); render(); }
+    if(state.cash >= 2000) { state.cash -= 2000; state.health = Math.min(100, state.health + 20); log("Tatil yapıldı (+20% ❤️)."); render(); }
   }
-
   function toggleProtection() { state.protection = !state.protection; render(); }
 
   function openBusiness() {
@@ -463,27 +607,41 @@
     if(state.cash >= t.cost) { state.cash -= t.cost; state.businesses.push({ typeIdx: typeIdx, employees: 0, marketingLevel: 0 }); log(`${t.name} kurdun!`); render(); }
   }
   function hireStaff(idx) { state.businesses[idx].employees += 1; render(); }
-  function runAds(idx) {
-    if(state.cash >= 5000) { state.cash -= 5000; state.businesses[idx].marketingLevel += 1; log("Reklam başlatıldı."); render(); }
-  }
 
   function render() {
     document.getElementById('avatar-display').src = state.avatarUrl;
-    document.getElementById('profile-display').innerText = `${state.charName} (${state.age})`;
-    document.getElementById('health-display').innerText = `${state.health}% ❤️`;
+    document.getElementById('profile-display').innerText = `${state.charName} (${state.age}y)`;
+    document.getElementById('health-display').innerText = `${state.health}% ❤️ / %${state.beauty} ✨`;
     document.getElementById('cash').innerText = `$${Math.floor(state.cash).toLocaleString()}`;
-    document.getElementById('rep').innerText = `${state.reputation} ⭐`;
-    document.getElementById('generation-display').innerText = `${state.generation}. Kuşak`;
-    document.getElementById('protection-display').innerText = state.protection ? "Aktif 🛡️" : "Kapalı ⚠️";
-    document.getElementById('protection-display').className = state.protection ? "stat-val purple" : "stat-val red";
+    document.getElementById('time-display').innerText = `Yıl ${Math.floor(state.week/52)+1} (H.${state.week%52 || 52})`;
+    document.getElementById('rep').innerText = `${state.rep || state.reputation} ⭐`;
+    document.getElementById('politics-display').innerText = state.office;
+
+    // Hastane Paneli Kontrolü
+    if(state.disease) {
+      document.getElementById('hospital-card').style.display = 'block';
+      document.getElementById('disease-info').innerText = `ACİL: ${state.disease} teşhisi kondu! Tedavi olunmazsa sağlığın hızla düşer.`;
+    } else {
+      document.getElementById('hospital-card').style.display = 'none';
+    }
+
+    let stockHtml = '';
+    state.stocks.forEach(s => {
+      stockHtml += `
+        <div class="row">
+          <div><strong>${s.name}</strong> <span class="gold">$${s.price.toFixed(1)}</span></div>
+          <div style="display:flex; gap:4px; align-items:center;">
+            <span style="font-size:11px; margin-right:4px;">Sahip: ${s.owned}</span>
+            <button class="btn-sm btn-buy" onclick="buyStock('${s.id}')">Al</button>
+            <button class="btn-sm btn-sell" onclick="sellStock('${s.id}')">Sat</button>
+          </div>
+        </div>`;
+    });
+    document.getElementById('stocks-container').innerHTML = stockHtml;
 
     let invHtml = '';
     if (state.inventory.length === 0) invHtml = '<span style="font-size:11px; color:#8b949e;">Henüz hiçbir şey satın almadın.</span>';
-    else {
-      state.inventory.slice().reverse().forEach(i => {
-        invHtml += `<span class="inv-tag">${i.icon} ${i.name}</span>`;
-      });
-    }
+    else { state.inventory.slice().reverse().forEach(i => { invHtml += `<span class="inv-tag">${i.icon} ${i.name}</span>`; }); }
     document.getElementById('inventory-list').innerHTML = invHtml;
 
     let flirtHtml = '';
@@ -492,13 +650,10 @@
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #21262d; padding:8px 0;">
         <div style="display:flex; gap:8px; align-items:center;">
            <img src="${f.avatar}" style="width:36px; height:36px; border-radius:4px; background:#21262d;">
-           <div>
-             <strong style="font-size:12px;">${f.name}</strong>
-             <div style="font-size:10px; color:#8b949e;">${f.job} | ${flirtStatus[f.level]}</div>
-           </div>
+           <div><strong style="font-size:12px;">${f.name}</strong><div style="font-size:10px; color:#8b949e;">${f.job} | ${flirtStatus[f.level]}</div></div>
         </div>
-        <div style="display:flex; gap:4px; flex-wrap:wrap; justify-content:flex-end; width:130px;">
-          <button class="btn-sm" style="background:#a371f7; color:white;" onclick="dateFlirt(${idx})">Buluş (-$300)</button>
+        <div style="display:flex; gap:4px; justify-content:flex-end;">
+          <button class="btn-sm" style="background:#a371f7; color:white;" onclick="dateFlirt(${idx})">Buluş</button>
           <button class="btn-sm" style="background:#d29922; color:black;" onclick="openShop(${idx})">Hediye</button>
           ${(f.level === 3 && !state.spouse) ? `<button class="btn-sm btn-buy" onclick="marryFlirt(${idx})">Evlen</button>` : ''}
         </div>
@@ -512,64 +667,61 @@
       state.partners.forEach((p, idx) => { 
         partnerHtml += `
           <div class="row" style="align-items:center;">
-            <div style="display:flex; gap:8px; align-items:center;">
-              <img src="${p.avatar}" style="width:32px; height:32px; border-radius:4px; background:#21262d;">
-              <div><strong>${p.type}</strong></div>
-            </div>
+            <div style="display:flex; gap:8px; align-items:center;"><img src="${p.avatar}" style="width:32px; height:32px; border-radius:4px;"><div><strong>${p.type}</strong></div></div>
             <button class="btn-action" onclick="marryStandard(${idx})">Evlen</button>
           </div>`; 
       });
       document.getElementById('partner-options').innerHTML = partnerHtml;
     } else {
-      document.getElementById('family-status').innerHTML = `
-        <div style="display:flex; gap:8px; align-items:center;">
-          <img src="${state.spouse.avatar}" style="width:36px; height:36px; border-radius:4px; background:#21262d;">
-          Evlisiniz. (<span class="gold">${state.spouse.type}</span>)
-        </div>`;
+      document.getElementById('family-status').innerHTML = `<div style="display:flex; gap:8px; align-items:center;"><img src="${state.spouse.avatar}" style="width:32px; height:32px; border-radius:4px;">Evlisiniz. (<span class="gold">${state.spouse.type}</span>)</div>`;
       document.getElementById('partner-options').innerHTML = `<button class="btn-action" style="width:100%;" onclick="haveChild(false)">Eşinle Çocuk Yap</button>`;
     }
 
     let childHtml = '';
-    state.children.forEach(c => {
-      let genderIcon = c.gender === 'E' ? "👦" : "👧";
+    if(state.children.length === 0) childHtml = '<span style="font-size:11px; color:#8b949e;">Çocuğun yok.</span>';
+    state.children.forEach((c, cIdx) => {
+      let gIcon = c.gender === 'E' ? "👦" : "👧";
       let tag = c.isBastard ? "(Gayrimeşru)" : "";
-      let color = c.isBastard ? "#f85149" : "#c9d1d9";
-      childHtml += `<div style="background:#21262d; padding:4px 8px; border-radius:4px; margin-bottom:4px; color:${color}; font-size:12px;">${genderIcon} ${c.name} ${tag} (Yaş: ${c.age})</div>`;
+      childHtml += `
+        <div style="background:#21262d; padding:6px; border-radius:4px; margin-bottom:6px; font-size:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span>${gIcon} <strong>${c.name}</strong> ${tag} (Yaş: ${c.age}) | Zeka: ${c.intelligence} | Hırs: ${c.ambition}</span>
+            <div style="display:flex; gap:4px;">
+              ${!c.educated ? `<button class="btn-sm btn-buy" onclick="educateChild(${cIdx}, 'lise')">Lise</button><button class="btn-sm btn-buy" onclick="educateChild(${cIdx}, 'uni')">Üni</button>` : ''}
+              ${state.businesses.length > 0 && !c.workingBiz ? `<button class="btn-sm btn-action" onclick="assignChildToBiz(${cIdx}, 0)">CEO</button>` : ''}
+            </div>
+          </div>
+        </div>`;
     });
     document.getElementById('children-list').innerHTML = childHtml;
 
     let bizHtml = '';
     state.businesses.forEach((b, idx) => {
       let t = state.bizTypes[b.typeIdx];
-      let netIncome = t.baseInc + (b.employees * t.empBoost) - (b.employees * t.empCost) + (b.marketingLevel * (t.baseInc * 0.3));
+      let haftalikNet = (t.baseInc + (b.employees * t.empBoost) - (b.employees * t.empCost)) / 52;
       bizHtml += `
         <div style="background:#21262d; padding:8px; border-radius:6px; margin-bottom:8px; font-size:12px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <strong>${t.name}</strong> <span class="green">+$${Math.floor(netIncome).toLocaleString()}/yıl</span>
-          </div>
-          <div style="color:#8b949e; margin-bottom:6px; font-size:10px;">Çalışan: ${b.employees} | Reklam Lvl: ${b.marketingLevel}</div>
-          <div style="display:flex; gap:4px;">
-            <button class="btn-sm btn-buy" onclick="hireStaff(${idx})">İşe Al</button>
-            <button class="btn-sm btn-action" onclick="runAds(${idx})">Reklam (-$5k)</button>
-          </div>
-        </div>
-      `;
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><strong>${t.name}</strong> <span class="green">+$${Math.floor(haftalikNet).toLocaleString()}/hafta</span></div>
+          <div style="color:#8b949e; margin-bottom:6px; font-size:10px;">Çalışan: ${b.employees}</div>
+          <button class="btn-sm btn-buy" onclick="hireStaff(${idx})">İşe Al</button>
+        </div>`;
     });
     document.getElementById('businesses-container').innerHTML = bizHtml;
   }
 
   function commitCrime(type) {
-    state.health -= 15; 
-    if(type === 'hack') {
-      if(Math.random() < 0.25) {
-        if (state.cash >= 15000) { state.cash -= 15000; log(`Yakalandın! $15k kefalet ödedin.`); } 
-        else { log("Hapse girdin (5 Yıl)."); advanceYears(5); }
-      } else { state.cash += 10000; log("Hack başarılı! $10,000 kazandın."); }
-    } else if (type === 'smuggle') {
-      if(Math.random() < 0.45) {
-        if (state.cash >= 60000) { state.cash -= 60000; log(`Baskın! $60k rüşvet verdin.`); } 
-        else { log("Yakalandın! 10 yıl hapis yattın."); advanceYears(10); }
-      } else { state.cash += 50000; log("Kaçakçılık başarılı! $50,000 kazandın."); }
+    state.health -= 12; 
+    if(type === 'colombia') {
+      if(Math.random() < 0.60) {
+        let megaBribe = 300000;
+        if(confirm(`KOLOMBİYA'DA DEA BASKINI! Federal yetkililere $${megaBribe.toLocaleString()} devasa rüşvet verip serbest kalmak ister misin?`)) {
+          if(state.cash >= megaBribe) { state.cash -= megaBribe; log("Milyonluk rüşvet çarkı işledi, DEA serbest bıraktı 🤫💼"); }
+          else { log("Yeterli rüşvet paran yok! 7 yıl Kolombiya hapsindesin (364 Hafta)."); advanceWeeks(364); }
+        } else { log("7 yıl hapis cezasına çarptırıldın (364 Hafta)."); advanceWeeks(364); }
+      } else {
+        state.cash += 350000; state.reputation += 30;
+        log("🇨🇴 Kolombiya kartel sevkiyatı kusursuz geçti! Temiz $350.000 vurdun (+30⭐).");
+      }
     }
     render();
   }
@@ -583,11 +735,16 @@
 
   function haveChild(isBastard, partnerName = "") {
     let cGender = Math.random() > 0.5 ? 'E' : 'K';
-    let names = cGender === 'E' ? ["Ali", "Mert", "Can", "Bora", "Burak", "Emir"] : ["Ayşe", "Zeynep", "Ece", "Lara", "Ceren", "Melis"];
+    let names = cGender === 'E' ? ["Ali", "Mert", "Can", "Bora"] : ["Ayşe", "Zeynep", "Ece", "Lara"];
     let name = names[Math.floor(Math.random() * names.length)];
-    state.children.push({ name: name, age: 0, isBastard: isBastard, gender: cGender });
-    if(isBastard) log(partnerName ? `Skandal! ${partnerName} ile kaçamaktan çocuğun oldu: ${name}` : `Gayrimeşru çocuğun oldu: ${name}`);
-    else log(`Bir çocuğunuz oldu: ${name}`);
+    let parentIntel = Math.floor(50 + Math.random() * 40);
+    let parentAmbition = Math.floor(40 + Math.random() * 50);
+    
+    state.children.push({ 
+      name: name, age: 0, isBastard: isBastard, gender: cGender, 
+      intelligence: parentIntel, ambition: parentAmbition, educated: null, workingBiz: null 
+    });
+    log(isBastard ? `Skandal! ${partnerName} ile kaçamaktan çocuğun oldu: ${name} (Genetik Zeka: ${parentIntel})` : `Bir çocuğunuz oldu: ${name}`);
     render();
   }
 
@@ -595,8 +752,7 @@
     if(state.age >= 90 || state.health <= 0) {
       document.getElementById('main-ui').style.display = 'none';
       document.getElementById('death-screen').style.display = 'block';
-      document.getElementById('death-reason').innerText = state.health <= 0 ? "Aşırı Stresten Öldün" : "Yaşlılıktan Vefat Ettin";
-      
+      document.getElementById('death-reason').innerText = state.health <= 0 ? "Aşırı Stresten veya Hastalıktan Öldün" : "Yaşlılıktan Vefat Ettin";
       let heirHtml = '';
       if(state.children.length === 0) {
         heirHtml = `<p>Çocuğunuz olmadığı için imparatorluk çöktü.</p><button class="heir-btn" onclick="resetGame()">Baştan Başla</button>`;
@@ -613,28 +769,66 @@
     return false;
   }
 
-  function advanceYears(years) {
-    for (let i = 0; i < years; i++) {
+  function advanceWeeks(weeks) {
+    for (let i = 0; i < weeks; i++) {
       if (checkDeath()) return;
-      state.age += 1;
-      state.health -= 3; 
+      state.week += 1;
       
-      if (state.spouse) { state.cash -= state.spouse.cost; state.cash += state.spouse.income; }
+      // Ev konforunun sağlık ve strese haftalık etkisi
+      let evVarmi = state.inventory.some(i => i.cat === 'Emlak');
+      let saglikYenileme = evVarmi ? 0.3 : -0.2;
+      state.health = Math.min(100, Math.max(0, state.health + saglikYenileme));
+
+      // Hastalık tetiklenme şansı (%1)
+      if (!state.disease && Math.random() < 0.01) {
+        let diseases = ["Grip", "Kronik Yorgunluk", "Kalp Ritmi Bozukluğu", "Depresyon"];
+        state.disease = diseases[Math.floor(Math.random() * diseases.length)];
+        log(`⚠️ SAĞLIK UYARISI: Doktorlar sana ${state.disease} teşhisi koydu! Hastaneye gitmelisin.`);
+      }
+
+      if (state.disease) {
+        state.health -= 1.5; // Hastalık tedavi edilmezse sağlığı yerle bir eder
+      }
+
+      // Araç bakım masrafı ve kaza ihtimali
+      let arabaVarmi = state.inventory.some(i => i.cat === 'Araç');
+      if (arabaVarmi && Math.random() < 0.005) {
+        let tamirMasrafi = 5000;
+        state.cash -= tamirMasrafi;
+        state.health -= 10;
+        log(`💥 TRAFİK KAZASI! Lüks aracınla kaza yaptın. Tamir masrafı ve hastane: -$${tamirMasrafi}, -10% ❤️`);
+      }
+
+      if (Math.random() < 0.04) { triggerRandomEvent(); return; }
+
+      if (state.week % 52 === 0) {
+        state.age += 1;
+        state.children.forEach(c => c.age += 1);
+      }
+      
+      if (state.spouse) { 
+        let haftalikMasraf = (state.spouse.cost * 500) / 52;
+        state.cash -= haftalikMasraf; 
+        if(state.spouse.income) state.cash += state.spouse.income / 52;
+      }
       state.cash += state.passiveIncome; 
+      state.cash += state.gangIncome / 52;
       
       state.businesses.forEach(b => {
         let t = state.bizTypes[b.typeIdx];
-        state.cash += t.baseInc + (b.employees * t.empBoost) - (b.employees * t.empCost) + (b.marketingLevel * (t.baseInc * 0.3));
+        state.cash += (t.baseInc + (b.employees * t.empBoost) - (b.employees * t.empCost)) / 52;
       });
 
-      state.children.forEach(c => c.age += 1);
+      state.stocks.forEach(s => {
+        s.price = Math.max(5, s.price * (1 + ((Math.random() * (s.vol * 2)) - s.vol) / 10));
+      });
     }
     if (!checkDeath()) render();
   }
 
-  function nextYear() {
-    advanceYears(1);
-    log(`1 Yıl geçti. Yaş: ${state.age}`);
+  function nextWeek() {
+    advanceWeeks(1);
+    log(`1 Hafta geçti. (Hafta ${state.week})`);
     saveGame(); 
   }
 
@@ -643,11 +837,14 @@
     state.charName = heir.name;
     state.gender = heir.gender; 
     state.age = heir.age; 
+    state.week = heir.age * 52;
     state.generation += 1; 
     state.health = 100; 
+    state.beauty = 50;
+    state.office = "Sivil";
+    state.disease = null;
     state.spouse = null; 
     state.children = [];
-    
     state.flirts = generateFlirts(state.gender);
     state.partners = generatePartners(state.gender);
     
