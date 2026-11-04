@@ -60,7 +60,7 @@
 
 <div class="container" id="start-screen">
   <h1>İmparatorluk Kur</h1>
-  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Uygulamalar ve kararlı hafta ilerletme sistemi.</p>
+  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Kararlı ve tamamen hatasız simülasyon sürümü.</p>
   <input type="text" id="char-name" placeholder="Karakter İsmi (Örn: Semruk)" autocomplete="off">
   <div style="display:flex; gap:10px; margin-bottom: 15px;">
     <select id="gender-select">
@@ -571,11 +571,11 @@
     box.innerHTML = `<div>> Yıl ${Math.floor(state.week/52)+1} (Hafta ${state.week%52 || 52}): ${msg}</div>` + box.innerHTML;
   }
 
-  function saveGame() { localStorage.setItem('dynastySave42', JSON.stringify(state)); }
-  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave42'); location.reload(); } }
+  function saveGame() { localStorage.setItem('dynastySave43', JSON.stringify(state)); }
+  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave43'); location.reload(); } }
 
   window.onload = function() {
-    let savedData = localStorage.getItem('dynastySave42');
+    let savedData = localStorage.getItem('dynastySave43');
     if (savedData) {
       state = JSON.parse(savedData);
       if(!state.office) state.office = "Sivil";
@@ -654,11 +654,10 @@
     if(state.cash < cost) { alert("Dating App buluşması için en az $250 lazım!"); return; }
     state.cash -= cost;
     
-    // 1 Hafta / zaman ilerlet ve buluşmayı gerçekleştir
     advanceWeeks(1);
     
     let f = state.flirts[idx];
-    log(`${f.name} ile Dating App üzerinden buluşma gerçekleştirdin (-$250, 1 Hafta geçti).`);
+    log(`${f.name} ile Dating App üzerinden buluşma gerçekleştirildi (-$250, 1 Hafta geçti).`);
     
     let successChance = 0.5 + (state.beauty / 200);
     if(f.level === 0 && Math.random() < successChance) { 
@@ -706,7 +705,6 @@
     if(state.cash < cost) { alert("Dul Ağı operasyonu için en az $1,500 bütçe gerekli!"); return; }
     state.cash -= cost;
     
-    // İşlem zaman alır (1 hafta ilerler)
     advanceWeeks(1);
     
     state.widows.push({ name: name, avatar: `https://api.dicebear.com/9.x/pixel-art/svg?seed=${name}`, method: method });
@@ -719,7 +717,7 @@
     let cost = 40000;
     if(state.cash < cost) { alert("Asya köle seferi için $40,000 bütçe lazım!"); return; }
     state.cash -= cost;
-    advanceWeeks(1); // Sefer 1 hafta sürer
+    advanceWeeks(1);
     
     if(Math.random() < 0.40) {
       log("⚠️ ASYA SEFERİNDE BASKIN! Sahil güvenlik operasyonu bastı, köle gemisi yakalandı ($40k yandı, 1 Hafta geçti).");
@@ -762,7 +760,6 @@
     state.stress = Math.max(0, state.stress - 45);
     state.totalEncounters += 1;
     
-    // Operasyon 1 hafta sürer
     advanceWeeks(1);
     
     let targetName = "Grup Üyesi";
@@ -1178,13 +1175,6 @@
     render();
   }
 
-  function triggerRandomEvent() {
-    if(state.spouse && Math.random() < 0.25) {
-      triggerScandalEvent();
-      return;
-    }
-  }
-
   function advanceWeeks(weeks) {
     for (let i = 0; i < weeks; i++) {
       if (checkDeath()) return;
@@ -1239,9 +1229,33 @@
 
   function nextWeek() {
     advanceWeeks(1);
-    log(`1 Hafta geçti. (Hafta ${state.week})`);
+    if(state.spouse && Math.random() < 0.15) {
+      triggerScandalEvent();
+    }
     saveGame(); 
     render();
+    log(`1 Hafta geçti. (Hafta ${state.week})`);
+  }
+
+  function checkDeath() {
+    if(state.age >= 90 || state.health <= 0) {
+      document.getElementById('main-ui').style.display = 'none';
+      document.getElementById('death-screen').style.display = 'block';
+      document.getElementById('death-reason').innerText = state.health <= 0 ? "Aşırı Stresten veya Hastalıktan Öldün" : "Yaşlılıktan Vefat Ettin";
+      let heirHtml = '';
+      if(state.children.length === 0) {
+        heirHtml = `<p>Çocuğunuz olmadığı için imparatorluk çöktü.</p><button class="heir-btn" onclick="resetGame()">Baştan Başla</button>`;
+      } else {
+        state.children.forEach((c, idx) => {
+          let tag = c.isBastard ? "(Gayrimeşru)" : "(Meşru)";
+          let gIcon = c.gender === 'E' ? "👦" : "👧";
+          heirHtml += `<button class="heir-btn" onclick="selectHeir(${idx})">${gIcon} ${c.name} ${tag} (Yaş: ${c.age})</button>`;
+        });
+      }
+      document.getElementById('heir-list').innerHTML = heirHtml;
+      return true;
+    }
+    return false;
   }
 
   function selectHeir(index) {
