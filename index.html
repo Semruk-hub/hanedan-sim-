@@ -60,7 +60,7 @@
 
 <div class="container" id="start-screen">
   <h1>İmparatorluk Kur</h1>
-  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Kararlı ve hatasız simülasyon sürümü.</p>
+  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Uygulamalar ve kararlı hafta ilerletme sistemi.</p>
   <input type="text" id="char-name" placeholder="Karakter İsmi (Örn: Semruk)" autocomplete="off">
   <div style="display:flex; gap:10px; margin-bottom: 15px;">
     <select id="gender-select">
@@ -134,11 +134,11 @@
         <button class="btn-sm btn-buy" style="background:#ff79c6; color:black;" onclick="openUnderwearForeskinModal()">🩲 Fetiş & Biriktir</button>
       </div>
       <div class="row" id="swinger-app-row" style="display:none;">
-        <div><strong>🔥 Swinger & Hotwife Ağı (App)</strong> <div style="font-size:10px; color:#8b949e;">Eşini elit VIP'lerle paylaş, büyük paralar kazan</div></div>
+        <div><strong>🔥 Swinger & Hotwife Ağı (App)</strong> <div style="font-size:10px; color:#8b949e;">Maliyet: $2,500 | Eşini VIP'lerle paylaş</div></div>
         <button class="btn-sm btn-buy" style="background:#e1306c; color:white;" onclick="openSwingerAppModal()">Uygulamayı Aç 📱</button>
       </div>
       <div class="row">
-        <div><strong>🖤 Dul Kadınlar Ağı (Gizli App)</strong> <div style="font-size:10px; color:#8b949e;">Dul kadınları tavla veya zorla, paylaş ve DarkWeb'de sat</div></div>
+        <div><strong>🖤 Dul Kadınlar Ağı (Gizli App)</strong> <div style="font-size:10px; color:#8b949e;">Maliyet: $1,500 | Dul kadınları ağa bağla</div></div>
         <button class="btn-sm btn-buy" style="background:#21262d; border:1px solid #ff79c6; color:#ff79c6;" onclick="openWidowsAppModal()">Dul Ağı 🥀</button>
       </div>
       <div class="row">
@@ -158,7 +158,7 @@
         <button class="btn-sm btn-action" style="background:#ff4500;" onclick="nightLifeEncounter()">Eğlen</button>
       </div>
       <div class="row" style="border-bottom: none;">
-        <div><strong>📱 Flört App (Sosyal Medya)</strong> <div style="font-size:10px; color:#8b949e;">Tanış, buluş, hediyeler gönder</div></div>
+        <div><strong>📱 Flört App (Dating / Sosyal Medya)</strong> <div style="font-size:10px; color:#8b949e;">Maliyet: $250 | Buluş ve ilişkiyi ilerlet</div></div>
         <button class="btn-action" style="background: #e1306c;" onclick="toggleFlirtApp()">Uygulamayı Aç</button>
       </div>
       <div id="flirt-app-container" class="flirt-box"></div>
@@ -304,7 +304,7 @@
 <div id="widows-modal" class="modal-overlay">
   <div class="modal-content">
     <h2 style="color:#ff79c6;">🥀 Dul Kadınlar Ağı (Gizli Portâl) <button class="btn-sm btn-sell" onclick="closeWidowsAppModal()">Kapat</button></h2>
-    <div style="font-size:11px; color:#8b949e; margin-bottom:10px;">Çevredeki dul kadınları tavlayarak gönüllü yapabilir veya çete gücüyle zorla boyun eğdirebilirsin:</div>
+    <div style="font-size:11px; color:#8b949e; margin-bottom:10px;">Maliyet: $1,500 | Çevredeki dul kadınları ağa bağla:</div>
     <div style="flex-grow:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;" id="widows-profiles-list"></div>
   </div>
 </div>
@@ -313,7 +313,7 @@
 <div id="swinger-modal" class="modal-overlay">
   <div class="modal-content">
     <h2 style="color:#e1306c;">🔥 Swinger & Hotwife Gizli Ağı <button class="btn-sm btn-sell" onclick="closeSwingerAppModal()">Kapat</button></h2>
-    <div style="font-size:11px; color:#8b949e; margin-bottom:10px;">Eşini, Asya kölelerini veya dul kadınları VIP müşterilerle paylaşarak büyük paralar kazan:</div>
+    <div style="font-size:11px; color:#8b949e; margin-bottom:10px;">Maliyet: $2,500 | VIP müşterilerle paylaşarak vurgun yap:</div>
     <div style="flex-grow:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;" id="swinger-partners-list"></div>
   </div>
 </div>
@@ -471,9 +471,9 @@
   ];
 
   const swingerProfiles = [
-    { name: "Mert & Selin Çifti", style: "Elit Gece Kulübü Üyeleri", reward: 25000 },
-    { name: "Baron & Leyla", style: "Yeraltı Baronları", reward: 45000 },
-    { name: "Hollywood Prodüktörleri", style: "Gizli Rezidans Partisi", reward: 70000 }
+    { name: "Mert & Selin Çifti", style: "Elit Gece Kulübü Üyeleri", reward: 35000, cost: 2500 },
+    { name: "Baron & Leyla", style: "Yeraltı Baronları", reward: 60000, cost: 5000 },
+    { name: "Hollywood Prodüktörleri", style: "Gizli Rezidans Partisi", reward: 110000, cost: 10000 }
   ];
 
   const asianNames = ["Mei", "Lin", "Sakura", "Hana", "Aoi", "Yuki", "Jin", "Sora"];
@@ -571,11 +571,11 @@
     box.innerHTML = `<div>> Yıl ${Math.floor(state.week/52)+1} (Hafta ${state.week%52 || 52}): ${msg}</div>` + box.innerHTML;
   }
 
-  function saveGame() { localStorage.setItem('dynastySave41', JSON.stringify(state)); }
-  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave41'); location.reload(); } }
+  function saveGame() { localStorage.setItem('dynastySave42', JSON.stringify(state)); }
+  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave42'); location.reload(); } }
 
   window.onload = function() {
-    let savedData = localStorage.getItem('dynastySave41');
+    let savedData = localStorage.getItem('dynastySave42');
     if (savedData) {
       state = JSON.parse(savedData);
       if(!state.office) state.office = "Sivil";
@@ -648,23 +648,52 @@
     render();
   }
 
+  // DATING APP / FLÖRT BULUŞMASI (ZAMAN VE NAKİT GİDER)
+  function dateFlirt(idx) {
+    let cost = 250;
+    if(state.cash < cost) { alert("Dating App buluşması için en az $250 lazım!"); return; }
+    state.cash -= cost;
+    
+    // 1 Hafta / zaman ilerlet ve buluşmayı gerçekleştir
+    advanceWeeks(1);
+    
+    let f = state.flirts[idx];
+    log(`${f.name} ile Dating App üzerinden buluşma gerçekleştirdin (-$250, 1 Hafta geçti).`);
+    
+    let successChance = 0.5 + (state.beauty / 200);
+    if(f.level === 0 && Math.random() < successChance) { 
+      f.level = 1; 
+      log(`Tebrikler! ${f.name} ile takılmaya başladınız.`); 
+    } else if(f.level === 1 && Math.random() < successChance) {
+      f.level = 2;
+      log(`İlişki derinleşti! ${f.name} ile Sevgilisiniz.`);
+    } else if(f.level === 2 && Math.random() < successChance) {
+      f.level = 3;
+      log(`Harika! ${f.name} ile Nişanlandınız.`);
+    }
+    
+    openPositionsModal(f.name);
+    render();
+  }
+
+  // DUL KADINLAR UYGULAMASI (ZAMAN VE NAKİT GİDER)
   function openWidowsAppModal() {
     document.getElementById('widows-modal').style.display = 'flex';
     let namesSample = ["Berrin", "Nermin", "Füsun", "Jale", "Gönül", "Serap", "Lale", "Necla"];
     let html = '';
-    namesSample.forEach((wName, idx) => {
+    namesSample.forEach((wName) => {
       html += `
         <div class="row" style="background:#0d1117; padding:8px; border-radius:6px; align-items:center;">
           <div style="display:flex; gap:8px; align-items:center;">
             <img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=${wName}" style="width:32px;height:32px;border-radius:4px;">
             <div>
               <strong>${wName} (Dul)</strong>
-              <div style="font-size:10px; color:#8b949e;">Yalnız ve savunmasız</div>
+              <div style="font-size:10px; color:#8b949e;">Maliyet: $1,500 | 1 Hafta Süre</div>
             </div>
           </div>
           <div style="display:flex; gap:4px;">
-            <button class="btn-sm btn-buy" style="background:#238636;" onclick="recruitWidow('${wName}', 'tavla')">Tatlı Dille Tavla 🌹</button>
-            <button class="btn-sm btn-buy" style="background:#f85149;" onclick="recruitWidow('${wName}', 'zorla')">Zorla Boyun Eğdir ⛓️</button>
+            <button class="btn-sm btn-buy" style="background:#238636;" onclick="recruitWidow('${wName}', 'tavla')">Tavla 🌹</button>
+            <button class="btn-sm btn-buy" style="background:#f85149;" onclick="recruitWidow('${wName}', 'zorla')">Zorla ⛓️</button>
           </div>
         </div>`;
     });
@@ -673,12 +702,16 @@
   function closeWidowsAppModal() { document.getElementById('widows-modal').style.display = 'none'; }
 
   function recruitWidow(name, method) {
-    if(method === 'tavla' && state.cash < 2000) { alert("Tavlamak için hediye masrafı olarak $2,000 lazım!"); return; }
-    if(method === 'tavla') state.cash -= 2000;
+    let cost = 1500;
+    if(state.cash < cost) { alert("Dul Ağı operasyonu için en az $1,500 bütçe gerekli!"); return; }
+    state.cash -= cost;
+    
+    // İşlem zaman alır (1 hafta ilerler)
+    advanceWeeks(1);
     
     state.widows.push({ name: name, avatar: `https://api.dicebear.com/9.x/pixel-art/svg?seed=${name}`, method: method });
     state.reputation += method === 'tavla' ? 5 : -5;
-    log(`${name} isimli dul kadın ${method === 'tavla' ? 'romantik taktiklerle ağa' : 'çete gücüyle zorla sisteme'} dahil edildi.`);
+    log(`${name} isimli dul kadın ${method === 'tavla' ? 'romantik taktiklerle' : 'çete baskısıyla'} ağa bağlandı (-$1,500, 1 Hafta geçti).`);
     closeWidowsAppModal(); render();
   }
 
@@ -686,19 +719,20 @@
     let cost = 40000;
     if(state.cash < cost) { alert("Asya köle seferi için $40,000 bütçe lazım!"); return; }
     state.cash -= cost;
-    state.stress += 10;
+    advanceWeeks(1); // Sefer 1 hafta sürer
     
     if(Math.random() < 0.40) {
-      log("⚠️ ASYA SEFERİNDE BASKIN! Sahil güvenlik operasyonu bastı, köle gemisi yakalandı ($40k yandı).");
+      log("⚠️ ASYA SEFERİNDE BASKIN! Sahil güvenlik operasyonu bastı, köle gemisi yakalandı ($40k yandı, 1 Hafta geçti).");
     } else {
       let sName = asianNames[Math.floor(Math.random() * asianNames.length)];
       state.asianSlaves.push({ name: sName, avatar: `https://api.dicebear.com/9.x/pixel-art/svg?seed=${sName}` });
       state.reputation += 10;
-      log(`Asya'dan başarılı bir gizli seferle köle getirtildi: ${sName} malikaneye katıldı 🌏⛓️ (+10⭐)`);
+      log(`Asya'dan başarılı seferle köle getirildi: ${sName} malikaneye katıldı 🌏⛓️ (1 Hafta geçti).`);
     }
     render();
   }
 
+  // SWINGER & HOTWIFE AĞI (ZAMAN VE NAKİT GİDER)
   function openSwingerAppModal() {
     document.getElementById('swinger-modal').style.display = 'flex';
     let html = '';
@@ -707,31 +741,37 @@
         <div class="row" style="background:#0d1117; padding:8px; border-radius:6px; align-items:center;">
           <div>
             <strong>${sw.name}</strong>
-            <div style="font-size:10px; color:#8b949e;">${sw.style} | Vaat Edilen Nakit: <span class="green">$${sw.reward.toLocaleString()}</span></div>
+            <div style="font-size:10px; color:#8b949e;">${sw.style} | Maliyet: $${sw.cost.toLocaleString()} | Kazanç: <span class="green">$${sw.reward.toLocaleString()}</span></div>
           </div>
-          <button class="btn-sm btn-buy" style="background:#e1306c;" onclick="executeSwingerEvent(${sw.reward}, '${sw.name}')">Anlaş & Paylaş</button>
+          <button class="btn-sm btn-buy" style="background:#e1306c;" onclick="executeSwingerEvent(${sw.reward}, ${sw.cost}, '${sw.name}')">Anlaş & Paylaş</button>
         </div>`;
     });
     document.getElementById('swinger-partners-list').innerHTML = html;
   }
   function closeSwingerAppModal() { document.getElementById('swinger-modal').style.display = 'none'; }
 
-  function executeSwingerEvent(reward, groupName) {
+  function executeSwingerEvent(reward, cost, groupName) {
     if(!state.spouse && state.asianSlaves.length === 0 && state.widows.length === 0) { 
       alert("Paylaşacak eşin, Asya kölen veya kontrolünde dul kadın yok!"); 
       return; 
     }
+    if(state.cash < cost) { alert(`Swinger organizasyonu için $${cost.toLocaleString()} lazım!`); return; }
+    
+    state.cash -= cost;
     state.cash += reward;
     state.stress = Math.max(0, state.stress - 45);
     state.totalEncounters += 1;
+    
+    // Operasyon 1 hafta sürer
+    advanceWeeks(1);
     
     let targetName = "Grup Üyesi";
     if(state.spouse) targetName = state.spouse.type;
     else if(state.asianSlaves.length > 0) targetName = state.asianSlaves[0].name;
     else if(state.widows.length > 0) targetName = state.widows[0].name;
 
-    state.usedFetishInventory.push({ icon: "👗", name: `Kullanılmış ${targetName} Fantezi Elbisesi (${groupName})`, val: 6000 });
-    log(`${groupName} ile ${targetName} paylaşıldı! Vurgun yapıldı ve değerli fetiş eşyası kasaya düştü (+$${reward.toLocaleString()}). 🥂🔥`);
+    state.usedFetishInventory.push({ icon: "👗", name: `Kullanılmış ${targetName} Fantezi Elbisesi (${groupName})`, val: Math.floor(reward * 0.15) });
+    log(`${groupName} ile ${targetName} paylaşıldı! Vurgun yapıldı ve değerli fetiş eşyası kasaya düştü (Net Kazaç: +$${(reward-cost).toLocaleString()}, 1 Hafta geçti). 🥂🔥`);
     closeSwingerAppModal(); render();
   }
 
@@ -1139,46 +1179,10 @@
   }
 
   function triggerRandomEvent() {
-    if(state.spouse && Math.random() < 0.3) {
+    if(state.spouse && Math.random() < 0.25) {
       triggerScandalEvent();
       return;
     }
-    let events = [
-      {
-        title: "Vergi Denetimi Şoku!",
-        desc: "Maliye bakanlığı hesaplarında anormal hareketlilik sezdi ve seni incelemeye aldı.",
-        options: [
-          { text: "Rüşvet ver kurtul ($50,000)", action: () => { if(state.cash>=50000){state.cash-=50000; log("Maliye memurlarına $50k verip incelemeyi kapattın.");} else {state.cash-=state.cash; log("Paran yetmeyince şirketlerine el koydular!");} } },
-          { text: "Denetime diren (Mahkemelik ol)", action: () => { if(Math.random()<0.5){log("Mahkemeyi kazandın, tertemiz yırttın!");} else {state.cash-=100000; log("Mahkemeyi kaybettin, $100k ceza ödedin!");} } }
-        ]
-      },
-      {
-        title: "Şirkette Büyük Grev!",
-        desc: "Çalışanların maaş zammı talebiyle iş bıraktı.",
-        options: [
-          { text: "İstediklerini ver (Maliyetli)", action: () => { state.cash -= 20000; log("Çalışanların zam talebini kabul ettin (-$20,000)."); } },
-          { text: "Polis çağır / Dağıt", action: () => { state.reputation -= 10; log("Grev zorla bastırıldı, itibarın zedelendi (-10⭐)."); } }
-        ]
-      }
-    ];
-
-    let ev = events[Math.floor(Math.random() * events.length)];
-    document.getElementById('event-title').innerText = ev.title;
-    document.getElementById('event-desc').innerText = ev.desc;
-    
-    let btnHtml = '';
-    ev.options.forEach((opt, oIdx) => {
-      btnHtml += `<button class="action-btn" style="background:#238636; color:white;" onclick="resolveEvent(${oIdx})">${opt.text}</button>`;
-    });
-    document.getElementById('event-buttons').innerHTML = btnHtml;
-    document.getElementById('event-modal').style.display = 'flex';
-    window.currentEventOptions = ev.options;
-  }
-
-  function resolveEvent(optIdx) {
-    window.currentEventOptions[optIdx].action();
-    document.getElementById('event-modal').style.display = 'none';
-    render();
   }
 
   function advanceWeeks(weeks) {
@@ -1209,8 +1213,6 @@
         log(`💥 TRAFİK KAZASI! Lüks aracınla kaza yaptın (-$${tamirMasrafi}, -10% ❤️).`);
       }
 
-      if (Math.random() < 0.04) { triggerRandomEvent(); return; }
-
       if (state.week % 52 === 0) {
         state.age += 1;
         state.children.forEach(c => c.age += 1);
@@ -1233,12 +1235,13 @@
         s.price = Math.max(5, s.price * (1 + ((Math.random() * (s.vol * 2)) - s.vol) / 10));
       });
     }
-    if (!checkDeath()) render();
   }
 
   function nextWeek() {
     advanceWeeks(1);
+    log(`1 Hafta geçti. (Hafta ${state.week})`);
     saveGame(); 
+    render();
   }
 
   function selectHeir(index) {
@@ -1314,7 +1317,7 @@
     document.getElementById('slave-count').innerText = state.asianSlaves.length;
     if(state.asianSlaves.length === 0) slaveHtml = '<span style="font-size:11px; color:#8b949e;">Asya kölesi yok. Yeraltından sefer düzenle.</span>';
     else {
-      state.asianSlaves.forEach((sl, sIdx) => {
+      state.asianSlaves.forEach((sl) => {
         slaveHtml += `
           <div style="display:flex; justify-content:space-between; align-items:center; background:#21262d; padding:6px; border-radius:4px; margin-bottom:4px;">
             <div style="display:flex; gap:6px; align-items:center;"><img src="${sl.avatar}" style="width:28px;height:28px;border-radius:4px;"><strong>${sl.name} (Asya Kölesi)</strong></div>
@@ -1328,7 +1331,7 @@
     document.getElementById('widow-count').innerText = state.widows.length;
     if(state.widows.length === 0) widowHtml = '<span style="font-size:11px; color:#8b949e;">Kontrolünde dul kadın yok. Dul Ağı uygulamasını aç.</span>';
     else {
-      state.widows.forEach((wd, wIdx) => {
+      state.widows.forEach((wd) => {
         widowHtml += `
           <div style="display:flex; justify-content:space-between; align-items:center; background:#21262d; padding:6px; border-radius:4px; margin-bottom:4px;">
             <div style="display:flex; gap:6px; align-items:center;"><img src="${wd.avatar}" style="width:28px;height:28px;border-radius:4px;"><strong>${wd.name} (${wd.method === 'tavla' ? 'Gönüllü' : 'Baskı Altında'})</strong></div>
@@ -1347,7 +1350,7 @@
            <div><strong style="font-size:12px;">${f.name}</strong><div style="font-size:10px; color:#8b949e;">${f.job} | ${flirtStatus[f.level]}</div></div>
         </div>
         <div style="display:flex; gap:4px; justify-content:flex-end;">
-          <button class="btn-sm" style="background:#a371f7; color:white;" onclick="dateFlirt(${idx})">Buluş</button>
+          <button class="btn-sm" style="background:#a371f7; color:white;" onclick="dateFlirt(${idx})">Buluş ($250)</button>
           <button class="btn-sm" style="background:#d29922; color:black;" onclick="openShop(${idx})">Hediye</button>
           ${(f.level === 3 && !state.spouse) ? `<button class="btn-sm btn-buy" onclick="marryFlirt(${idx})">Evlen</button>` : ''}
         </div>
