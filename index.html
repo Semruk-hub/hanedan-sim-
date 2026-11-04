@@ -60,7 +60,7 @@
 
 <div class="container" id="start-screen">
   <h1>İmparatorluk Kur</h1>
-  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Hataları giderilmiş kararlı simülasyon sürümü.</p>
+  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Kararlı ve hatasız simülasyon sürümü.</p>
   <input type="text" id="char-name" placeholder="Karakter İsmi (Örn: Semruk)" autocomplete="off">
   <div style="display:flex; gap:10px; margin-bottom: 15px;">
     <select id="gender-select">
@@ -571,11 +571,11 @@
     box.innerHTML = `<div>> Yıl ${Math.floor(state.week/52)+1} (Hafta ${state.week%52 || 52}): ${msg}</div>` + box.innerHTML;
   }
 
-  function saveGame() { localStorage.setItem('dynastySave40', JSON.stringify(state)); }
-  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave40'); location.reload(); } }
+  function saveGame() { localStorage.setItem('dynastySave41', JSON.stringify(state)); }
+  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave41'); location.reload(); } }
 
   window.onload = function() {
-    let savedData = localStorage.getItem('dynastySave40');
+    let savedData = localStorage.getItem('dynastySave41');
     if (savedData) {
       state = JSON.parse(savedData);
       if(!state.office) state.office = "Sivil";
@@ -1274,7 +1274,6 @@
     document.getElementById('health-stress-display').innerText = `${Math.floor(state.health)}% ❤️ / %${Math.floor(state.stress)}`;
     document.getElementById('cash').innerText = `$${Math.floor(state.cash).toLocaleString()}`;
     document.getElementById('time-display').innerText = `Yıl ${Math.floor(state.week/52)+1} (H.${state.week%52 || 52})`;
-    document.getElementById('rep').innerText = `${state.reputation} ⭐`;
     document.getElementById('drunk-display').innerText = `${state.drunk}%`;
     document.getElementById('protection-display').innerText = state.protection ? "Açık" : "Kapalı";
     document.getElementById('politics-modal-office').innerText = state.office;
