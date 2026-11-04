@@ -60,7 +60,7 @@
 
 <div class="container" id="start-screen">
   <h1>İmparatorluk Kur</h1>
-  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Tamamen düzeltilmiş hatasız simülasyon sürümü.</p>
+  <p style="margin-bottom: 15px; font-size: 14px; color: #8b949e;">Güncellenmiş flört app ve hastane sistemi.</p>
   <input type="text" id="char-name" placeholder="Karakter İsmi (Örn: Semruk)" autocomplete="off">
   <div style="display:flex; gap:10px; margin-bottom: 15px;">
     <select id="gender-select">
@@ -153,17 +153,23 @@
         <div><strong>Lüks Tatil / Spa</strong> <div style="font-size:10px; color:#8b949e;">Stresi sıfırla (-$2,000)</div></div>
         <button class="btn-sm btn-buy" onclick="takeVacation()">Tatil Yap</button>
       </div>
-      <div class="row">
+      <div class="row" style="border-bottom: none;">
         <div><strong>🌙 Gece Hayatı & Hayat Kadını</strong> <div style="font-size:10px; color:#8b949e;">Rahatla, stres at (-$500)</div></div>
         <button class="btn-sm btn-action" style="background:#ff4500;" onclick="nightLifeEncounter()">Eğlen</button>
       </div>
-      <div class="row" style="border-bottom: none;">
-        <div><strong>📱 Flört App (Dating / Sosyal Medya)</strong> <div style="font-size:10px; color:#8b949e;">Maliyet: $250 | Buluş ve ilişkiyi ilerlet</div></div>
-        <button class="btn-action" style="background: #e1306c;" onclick="toggleFlirtApp()">Uygulamayı Aç</button>
-      </div>
-      <div id="flirt-app-container" class="flirt-box"></div>
-      <div id="family-status" style="font-size: 12px; margin: 12px 0 8px 0; color: #c9d1d9; border-top:1px solid #30363d; padding-top:8px;">Bekarsınız. Görücü Usulü Adaylar:</div>
-      <div id="partner-options" class="scroll-box" style="max-height:100px;"></div>
+    </div>
+
+    <!-- ÖZEL FLÖRT APP BÖLÜMÜ -->
+    <div class="card" style="border-color: #e1306c;">
+      <h2 style="color: #e1306c;">📱 Flört App (Dating & Sevgililer)</h2>
+      <div style="font-size:11px; color:#8b949e; margin-bottom:8px;">Uygulamadan tanıştığın adaylarla buluş, ilişkiyi ilerlet ve evlen:</div>
+      <div id="flirt-app-container" class="scroll-box" style="max-height:180px; display:flex; flex-direction:column; gap:6px;"></div>
+    </div>
+
+    <!-- EVLİLİK VE EŞ DURUMU -->
+    <div class="card">
+      <h2 id="family-status-title">💍 Evlilik & Eş Durumu</h2>
+      <div id="family-status" style="font-size: 12px; color: #c9d1d9;">Bekarsınız.</div>
     </div>
 
     <!-- ASYA KÖLELERİ VE HİZMETLİLERİ PANELİ -->
@@ -518,22 +524,6 @@
     return names.map((n, i) => ({ name: n, job: jobs[i], avatar: `https://api.dicebear.com/9.x/pixel-art/svg?seed=${n}`, level: 0 }));
   }
 
-  function generatePartners(playerGender) {
-    if(playerGender === 'E') {
-      return [
-        { type: 'Manken', cost: 200, repBoost: 60, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Isabella' },
-        { type: 'Sosyetik', cost: 150, repBoost: 40, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Jasmine' },
-        { type: 'Doktor', cost: 50, repBoost: 20, income: 3000, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Mia' }
-      ];
-    } else {
-      return [
-        { type: 'Aktör', cost: 200, repBoost: 60, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Liam' },
-        { type: 'Zengin İş Adamı', cost: 150, repBoost: 40, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Oliver' },
-        { type: 'Cerrah', cost: 50, repBoost: 20, income: 3000, avatar: 'https://api.dicebear.com/9.x/pixel-art/svg?seed=Noah' }
-      ];
-    }
-  }
-
   let defaultState = {
     charName: "", gender: "E", age: 18, week: 1, cash: 5000, reputation: 0, passiveIncome: 0, health: 100, stress: 10, beauty: 50, drunk: 0,
     office: "Sivil", gangPower: 0, gangIncome: 0, disease: null,
@@ -544,7 +534,7 @@
     widows: [],
     avatarUrl: "https://i.ibb.co/6byg5Lw/avatar-giri-imci.png",
     protection: true, spouse: null, children: [], inventory: [],
-    flirts: [], partners: [],
+    flirts: [],
     stocks: [
       { id: 'tech', name: 'NanoTech', price: 120, owned: 0, vol: 0.15 },
       { id: 'crypto', name: 'BitCoin TR', price: 500, owned: 0, vol: 0.35 },
@@ -571,11 +561,11 @@
     box.innerHTML = `<div>> Yıl ${Math.floor(state.week/52)+1} (Hafta ${state.week%52 || 52}): ${msg}</div>` + box.innerHTML;
   }
 
-  function saveGame() { localStorage.setItem('dynastySave44', JSON.stringify(state)); }
-  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave44'); location.reload(); } }
+  function saveGame() { localStorage.setItem('dynastySave45', JSON.stringify(state)); }
+  function resetGame() { if(confirm("Tüm imparatorluk silinecek. Emin misin?")) { localStorage.removeItem('dynastySave45'); location.reload(); } }
 
   window.onload = function() {
-    let savedData = localStorage.getItem('dynastySave44');
+    let savedData = localStorage.getItem('dynastySave45');
     if (savedData) {
       state = JSON.parse(savedData);
       if(!state.office) state.office = "Sivil";
@@ -602,17 +592,11 @@
     state.gender = document.getElementById('gender-select').value;
     state.avatarUrl = document.getElementById('avatar-select').value;
     state.flirts = generateFlirts(state.gender);
-    state.partners = generatePartners(state.gender);
 
     document.getElementById('start-screen').style.display = 'none';
     document.getElementById('main-ui').style.display = 'flex';
     log(`Hayat başladı. Adın: ${state.charName}, cebinde $5,000 var.`);
     render(); saveGame();
-  }
-
-  function toggleFlirtApp() {
-    let app = document.getElementById('flirt-app-container');
-    app.style.display = app.style.display === 'none' ? 'block' : 'none';
   }
 
   function soloMasturbation() {
@@ -648,7 +632,7 @@
     render();
   }
 
-  // DATING APP / FLÖRT BULUŞMASI (ZAMAN VE NAKİT GİDER)
+  // DATING APP BULUŞMASI (NAKİT VE ZAMAN GİDER)
   function dateFlirt(idx) {
     let cost = 250;
     if(state.cash < cost) { alert("Dating App buluşması için en az $250 lazım!"); return; }
@@ -675,7 +659,16 @@
     render();
   }
 
-  // DUL KADINLAR UYGULAMASI (ZAMAN VE NAKİT GİDER)
+  function marryFlirt(idx) {
+    let f = state.flirts[idx];
+    state.spouse = { type: f.name, cost: 500, repBoost: 15, income: 0, avatar: f.avatar };
+    state.reputation += 15;
+    log(`${f.name} ile evlendin!`);
+    state.flirts.splice(idx, 1); 
+    render();
+  }
+
+  // DUL KADINLAR AĞI
   function openWidowsAppModal() {
     document.getElementById('widows-modal').style.display = 'flex';
     let namesSample = ["Berrin", "Nermin", "Füsun", "Jale", "Gönül", "Serap", "Lale", "Necla"];
@@ -730,7 +723,7 @@
     render();
   }
 
-  // SWINGER & HOTWIFE AĞI (ZAMAN VE NAKİT GİDER)
+  // SWINGER & HOTWIFE AĞI
   function openSwingerAppModal() {
     document.getElementById('swinger-modal').style.display = 'flex';
     let html = '';
@@ -1135,33 +1128,6 @@
     render();
   }
 
-  // KARTEL SEVKİYATI (NAKİT GİDER VE RİSK TAŞIR)
-  function commitCrime(type) {
-    state.stress += 15; 
-    if(type === 'colombia') {
-      let cost = 75000;
-      if(state.cash < cost) { alert("Kolombiya kartel sevkiyatı için en az $75,000 sermaye lazım!"); return; }
-      state.cash -= cost;
-      
-      advanceWeeks(1); // Sevkiyat 1 hafta sürer
-      
-      if(Math.random() < 0.60) {
-        let megaBribe = 300000;
-        if(confirm(`KOLOMBİYA'DA DEA BASKINI! Federal yetkililere $${megaBribe.toLocaleString()} devasa rüşvet verip serbest kalmak ister misin?`)) {
-          if(state.cash >= megaBribe) { state.cash -= megaBribe; log("Milyonluk rüşvet çarkı işledi, DEA serbest bıraktı 🤫💼 (1 Hafta geçti)"); }
-          else { log("Yeterli rüşvet paran yok! 7 yıl Kolombiya hapsindesin (364 Hafta)."); advanceWeeks(364); }
-        } else { log("7 yıl hapis cezasına çarptırıldın (364 Hafta)."); advanceWeeks(364); }
-      } else {
-        let drugWin = 350000;
-        state.cash += drugWin; 
-        state.totalDrugEarnings += drugWin;
-        state.reputation += 30;
-        log("🇨🇴 Kolombiya kartel sevkiyatı kusursuz geçti! Temiz $350.000 vurdun (+30⭐, 1 Hafta geçti).");
-      }
-    }
-    render();
-  }
-
   function triggerScandalEvent() {
     if(!state.spouse) return;
     let scandalBribe = 100000;
@@ -1301,7 +1267,6 @@
     state.spouse = null; 
     state.children = [];
     state.flirts = generateFlirts(state.gender);
-    state.partners = generatePartners(state.gender);
     
     let avatars = ["https://i.ibb.co/6byg5Lw/avatar-giri-imci.png", "https://i.ibb.co/VMyhV6R/avatar-suco-ortagi.png", "https://i.ibb.co/bW8C9g4/avatar-hacker.png"];
     state.avatarUrl = heir.isBastard ? avatars[1] : avatars[Math.floor(Math.random() * avatars.length)];
@@ -1310,6 +1275,17 @@
     document.getElementById('main-ui').style.display = 'flex';
     log(`İmparatorluk ${state.charName} (${state.gender}) yönetimine geçti!`);
     saveGame(); render();
+  }
+
+  function cureDisease() {
+    let cost = 15000;
+    if(state.cash < cost) { alert("Hastanede tedavi olmak için $15,000 lazım!"); return; }
+    state.cash -= cost;
+    state.health = 100;
+    state.stress = Math.max(0, state.stress - 25);
+    log(`Hastanede başarılı bir tedavi gördün. ${state.disease} iyileşti ve sağlığın yerine geldi! 💉`);
+    state.disease = null;
+    render();
   }
 
   function render() {
@@ -1330,7 +1306,7 @@
 
     if(state.disease) {
       document.getElementById('hospital-card').style.display = 'block';
-      document.getElementById('disease-info').innerText = `ACİL: ${state.disease} teşhisi kondu! Tedavi olunmazsa sağlığın düşer.`;
+      document.getElementById('disease-info').innerText = `ACİL: ${state.disease} teşhisi kondu! Tedavi olunmazsa sağlığın düşer. ($15,000)`;
     } else {
       document.getElementById('hospital-card').style.display = 'none';
     }
@@ -1382,10 +1358,11 @@
     }
     document.getElementById('widows-list').innerHTML = widowHtml;
 
+    // FLÖRT APP AYRI BÖLÜM RENDER
     let flirtHtml = '';
     state.flirts.forEach((f, idx) => {
       flirtHtml += `
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #21262d; padding:8px 0;">
+      <div class="row" style="background:#0d1117; padding:8px; border-radius:6px; align-items:center;">
         <div style="display:flex; gap:8px; align-items:center;">
            <img src="${f.avatar}" style="width:36px; height:36px; border-radius:4px; background:#21262d;">
            <div><strong style="font-size:12px;">${f.name}</strong><div style="font-size:10px; color:#8b949e;">${f.job} | ${flirtStatus[f.level]}</div></div>
@@ -1400,19 +1377,15 @@
     document.getElementById('flirt-app-container').innerHTML = flirtHtml;
 
     if (!state.spouse) {
-      document.getElementById('family-status').innerText = "Bekarsınız. Görücü Usulü Adaylar:";
-      let partnerHtml = '';
-      state.partners.forEach((p, idx) => { 
-        partnerHtml += `
-          <div class="row" style="align-items:center;">
-            <div style="display:flex; gap:8px; align-items:center;"><img src="${p.avatar}" style="width:32px; height:32px; border-radius:4px;"><div><strong>${p.type}</strong></div></div>
-            <button class="btn-action" onclick="marryStandard(${idx})">Evlen</button>
-          </div>`; 
-      });
-      document.getElementById('partner-options').innerHTML = partnerHtml;
+      document.getElementById('family-status-title').innerText = "💍 Evlilik Durumu";
+      document.getElementById('family-status').innerHTML = `<span style="color:#8b949e;">Bekarsınız. (VIP Playmates veya flörtlerinizle nişanlanarak evlenebilirsiniz)</span>`;
     } else {
-      document.getElementById('family-status').innerHTML = `<div style="display:flex; gap:8px; align-items:center;"><img src="${state.spouse.avatar}" style="width:32px; height:32px; border-radius:4px;">Evlisiniz. (<span class="gold">${state.spouse.type}</span>)</div>`;
-      document.getElementById('partner-options').innerHTML = `<button class="btn-action" style="width:100%;" onclick="openPositionsModal('${state.spouse.type}')">Eşinle Yakınlaş</button>`;
+      document.getElementById('family-status-title').innerText = "💍 Evlilik Durumu";
+      document.getElementById('family-status').innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#21262d; padding:8px; border-radius:6px;">
+          <div style="display:flex; gap:8px; align-items:center;"><img src="${state.spouse.avatar}" style="width:32px; height:32px; border-radius:4px;">Evlisiniz. (<span class="gold">${state.spouse.type}</span>)</div>
+          <button class="btn-sm btn-action" onclick="openPositionsModal('${state.spouse.type}')">Eşinle Yakınlaş</button>
+        </div>`;
     }
 
     let childHtml = '';
